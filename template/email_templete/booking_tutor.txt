@@ -1,0 +1,10 @@
+Dear {{tutor_name}},
+
+Your session (id:{{sID}}) on {{date}} from {{startTime}} to {{endTime}} has been booked by {{student_name}}.
+
+Please note the contact information of your student below:
+Name: {{student_name}}
+Phone number: {{student_phoneNumber}}
+
+Regards,
+Tutoria

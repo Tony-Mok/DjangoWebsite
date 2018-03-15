@@ -1,0 +1,9 @@
+Dear {{student_name}}
+
+You have finished the session(id:{{sID}}) on {{date}} from {{startTime}} to {{endTime}}.
+We would like to invite you to comment on the performance of the tutor by link below:
+{{href}}{{userID}}/submit_review/{{tutorID}}/{{bookingID}}/
+
+Regards,
+Tutoria
+

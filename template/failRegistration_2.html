@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+{% csrf_token %}
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-light fixed-top" id="mainNav">
+      <div class="container">
+        <a class="navbar-brand js-scroll-trigger" href="index.html">Tutoria</a>
+        <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarResponsive">
+          <ul class="navbar-nav ml-auto">
+            <li class="nav-item">
+              <a class="nav-link js-scroll-trigger" href="#about">About</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link js-scroll-trigger" href="#services">Services</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link js-scroll-trigger" href="registration.html">Registration</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link js-scroll-trigger" href="login.html">Login</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+  
+  
+      
+        <header class="masthead">
+          <div class="header-content">
+            <section id="login">
+              <div class="container text-center" style="background:grey">
+                  <div>
+                      <div class="col-xs-12">
+                           <p>The email has been used by other<br></p>
+                           <a href="javascript:history.back()">Back</a>
+                      </div> <!-- /.col-xs-12 -->
+                  </div> <!-- /.row -->
+              </div> <!-- /.container -->
+            </section>
+          </div>
+        </header>
+      
+    {% endblock %}
+    
+    {% block javascriptinside %}
+    <script>
+      
+    </script>
+    {% endblock %}}
+  

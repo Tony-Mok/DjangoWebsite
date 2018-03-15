@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+{% csrf_token %}
+{% include "navigation_index.html" %}
+
+    <header class="masthead">
+      <div class="header-content">
+        <section id="login">
+            <div class="container text-center">
+                <div>
+                    <div class="col-xs-12">
+                      
+                        <h1>Create Your Tutoria Account</h1>
+                        <a href="/tutoria/registration_student" class="btn btn-primary btn-lg content_input word_wrap" >I am a Student</a>
+                        <a href="/tutoria/registration_tutor" class="btn btn-primary btn-lg content_input word_wrap">I am a Tutor</a>
+                        <a href="/tutoria/registration_student_tutor" class="btn btn-primary btn-lg content_input word_wrap">I am both a tutor and a student</a>
+                                      
+                    </div> <!-- /.col-xs-12 -->
+                </div> <!-- /.row -->
+            </div> <!-- /.container -->
+        </section>
+      </div>
+    </header>
+
+        {% endblock %}
+    {% block javascriptinside %}
+  
+    <script>
+        $("#admin_login_link").hover(function() {
+            $(this).css("color", "#f05f40");
+        }, function(){
+            $(this).css("color", "rgba(255,255,255,.3)");
+        });
+    </script>
+    
+
+ {% endblock %}

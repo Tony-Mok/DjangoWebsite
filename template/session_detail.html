@@ -1,0 +1,151 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+{% csrf_token %}
+  <input type="hidden" id="userID" name="userID" value="{{ userObj.id }}">
+    {% include "navigation.html" %}
+
+    <header class="masthead masthead-user">
+    <!--<header class="masthead-user">-->
+      <div class="header-content-user" id="header_content">
+        <div style="margin-right:0px;margin-left:0px;width:auto;">
+          
+        </div>
+      </div>
+    </header>
+    
+    <section>
+        <div class="container">
+            <div class="row">
+              <div class="col-lg-12 text-center">
+              <i class="fa fa-4x fa-address-card-o text-primary"></i>
+              <br><br>
+              <h2 class="section-heading">Session detail for: session {{bookingObj.id}}</h2>
+              <hr class="primary">
+              
+                <div class="sr-icons table-responsive" style="margin: auto;" align="left">
+                    <table id="example" class="table table-striped table-bordered" cellspacing="0" width="100%">
+                        <tr>
+                          <th width="20%">Session id</th>
+                          <td width="80%">{{ bookingObj.id }}</td>
+                        </tr>
+                        <tr>
+                          <th width="20%">Session time</th>
+                          <td width="80%">{{ bookingObj.date }}, {{ bookingObj.startTime }}-{{ bookingObj.endTime }}</td>
+                        </tr>
+
+                        <tr>
+                          <th width="20%">Student</th>
+                          <td width="80%">
+                            <ul>
+                              <li>ID: {{ bookingObj.student.user.id }}</li>
+                              <li>Name: {{ bookingObj.student.user.getFullName }}</li>
+                              <li>Username: {{ bookingObj.student.user.username }}</li>
+                              <li>Phone number: {{ bookingObj.student.user.phoneNumber }}</li>
+                              <li>Avatar: 
+                              {%if bookingObj.student.user.avatar %}
+                              <img src="/static/media/{{bookingObj.student.user.avatar}}" height="100">
+                              {% else %}
+                              <img src="/static/media/tutoria_default.png" height="100">
+                              {% endif %}
+                              </li>
+                            </ul>
+                          </td>
+                        </tr>
+                        <tr>
+                          <th width="20%">Tutor</th>
+                          <td width="80%">
+                            <ul>
+                              <li>ID: {{ bookingObj.tutor.user.id }}</li>
+                              <li>Name: {{ bookingObj.tutor.user.getFullName }}</li>
+                              <li>Username: {{ bookingObj.tutor.user.username }}</li>
+                              <li>Phone number: {{ bookingObj.tutor.user.phoneNumber }}</li>
+                              <li>Avatar: 
+                              {%if bookingObj.tutor.user.avatar %}
+                              <img src="/static/media/{{bookingObj.tutor.user.avatar}}" height="100">
+                              {% else %}
+                              <img src="/static/media/tutoria_default.png" height="100">
+                              {% endif %}
+                              </li>
+                            </ul>
+                          </td>
+                        </tr>
+                        <tr>
+                          <th width="20%">Status</th>
+                          <td width="80%">{{ bookingObj.status }}</td>
+                        </tr>
+                    </table>
+                </div>
+             
+            </section>
+            
+    {% endblock %}
+
+    {% block javascriptinside %}
+    <script>
+    $("#add-coins-btn").on("click", function() {
+            console.log("you clicked me!!");
+    });
+    scheduler.attachEvent("onClick", function (id,event){
+        var event = scheduler.getEvent(id);
+        if(event.isFull == false && event.isPassed == false) {
+          $("#eventID").val(event.id);
+          $("#time_popup").text(event.start_date + ' - ' + event.end_date);
+          $("#university_popup").text(event.university);
+          $("#tutor_popup").text(event.tutorName);
+          var totalPayment = parseInt(event.tutorHourlyRate) + parseInt(event.tutorHourlyRate)*0.05;
+          $("#payment_popup").text(event.tutorHourlyRate + ' (+5%) = $' + totalPayment.toString());
+          $( "#dialog-form" ).dialog();
+        }
+        return true;
+      });
+      
+      //var transDesc = document.getElementById("trans-desc");
+      //transDesc.innerHTML = "All about cats";
+    
+    
+      $("#admin_login_link").hover(function() {
+        $(this).css("color", "#f05f40");
+      }, function(){
+        $(this).css("color", "rgba(255,255,255,.3)");
+      });
+      
+
+      /*if($(window).width() < 992) {
+        $("#sidebar").hide();
+        $("#studentMenu").show();
+      }else{
+        $("#sidebar").show();
+        $("#studentMenu").hide();
+      }
+      $("#sidebar").hide();
+      $("#header_content").css("right", $("#sidebar_content").width()+18+10);*/
+      
+      //$(".masthead-user").css("min-height", $("#search_bar_form_group").height()+130);
+      $(window).resize(function() {
+        
+        /*if($(window).width() < 992) {
+          $("#sidebar").hide();
+          $("#studentMenu").show();
+        }else{
+          $("#sidebar").show();
+          $("#studentMenu").hide();
+        }
+        $("#header_content").css("right", $("#sidebar_content").width()+18+10);*/
+        //$(".masthead-user").css("min-height", $("#search_bar_form_group").height()+130);
+      });
+      
+      
+    	$(document).ready(function(){
+    		$('ul.dropdown-menu [data-toggle=dropdown]').on('click', function(event) {
+    			event.preventDefault(); 
+    			event.stopPropagation(); 
+    			$(this).parent().siblings().removeClass('open');
+    			$(this).parent().toggleClass('open');
+    		});
+    		$('#example').DataTable({searching: true, ordering: false, responsive: true});
+    	});
+    	
+    </script>
+    <script src="{% static "js/websocket.js" %}"></script>
+    {% endblock %}

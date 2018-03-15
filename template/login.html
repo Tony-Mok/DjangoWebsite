@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+{% csrf_token %}
+{% include "navigation_index.html" %}
+
+    <header class="masthead">
+      <div class="header-content">
+        <section id="login">
+          <div class="container text-center">
+              <div>
+                  <div class="col-xs-12">
+                      <div class="form-wrap">
+                        <h1>Login with Tutoria Account</h1>
+                        <form role="form" action="javascript:validate_user()" id="login-form" autocomplete="off">
+                          
+                          <div class="form-group">
+                            <label for="username" class="sr-only">Username</label>
+                            <input type="text" name="username" id="username" class="form-control content_input" placeholder="Username">
+                          </div>
+                          <div class="form-group">
+                            <label for="password" class="sr-only">Password</label>
+                            <input type="password" name="password" id="password" class="form-control content_input" placeholder="Password">
+                          </div>
+                          <a href="javascript:submitLoginForm()" class="btn btn-primary btn-lg content_input word_wrap">Login</a>
+                          <input type="submit" name="Submit" hidden/>
+                          
+                        </form>
+                        <hr>
+                        <a href="/tutoria/forget_password/" class="forget btn btn-primary btn-lg content_input word_wrap">Forgot your password?</a>
+                        
+                      </div>
+                  </div> <!-- /.col-xs-12 -->
+              </div> <!-- /.row -->
+          </div> <!-- /.container -->
+        </section>
+      </div>
+    </header>
+    {% endblock %}
+    
+    {% block javascriptinside %}
+    
+    <script>
+      function submitLoginForm() {
+        $("#login-form").submit();
+      }
+      $("#admin_login_link").hover(function() {
+        $(this).css("color", "#f05f40");
+      }, function(){
+        $(this).css("color", "rgba(255,255,255,.3)");
+      });
+      
+      
+    </script>
+    {% endblock %}
+    
+
+
+  
+

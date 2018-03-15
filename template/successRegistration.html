@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+{% csrf_token %}
+    <!-- Navigation -->
+
+  
+      {% include "navigation.html" %}
+        <header class="masthead">
+          <div class="header-content">
+            <section id="login">
+              <div class="container text-center" style="background:grey">
+                  <div>
+                      <div class="col-xs-12">
+                           <p>Success</p>
+                      </div> <!-- /.col-xs-12 -->
+                  </div> <!-- /.row -->
+              </div> <!-- /.container -->
+            </section>
+          </div>
+        </header>
+      
+    {% endblock %}
+    
+    {% block javascriptinside %}
+    <script>
+      var delay = 2000; 
+      setTimeout(function(){ window.location ="/tutoria/index/"; }, delay);
+    </script>
+    {% endblock %}}
+  

@@ -1,0 +1,134 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+{% csrf_token %}
+    <input type="hidden" id="userID" name="userID" value="{{ userID }}">
+    <!-- Navigation -->
+
+    {% include "navigation.html" %}
+    
+    <header class="masthead masthead-user">
+      <div class="header-content-user" id="header_content">
+        <div style="margin-right:0px;margin-left:0px;width:auto;">
+          
+        </div>
+      </div>
+    </header>
+    
+    <section id="services">
+        <div class="container">
+            <div class="row">
+              <div class="col-lg-12 text-center">
+                <h2 class="section-heading">Wallet</h2>
+                <hr class="primary">
+                <h4>Balance: ${{balance}}</h4>
+                <a href="../coins" class="btn btn-primary btn-lg content_input word_wrap" id="add-coins-btn">Add coins +</a>
+                <a href="../withdraw" class="btn btn-primary btn-lg content_input word_wrap" id="withdraw-coins-btn">Withdraw to bank account</a>
+                <br>
+                <br>
+                <h3 align=left>  Transaction History</h3>
+                <hr align="left" style="max-width:100%; ">
+                <div class="sr-icons table-responsive" style="margin: auto; min-height: 300px;">
+                    <table id="example" class="table table-striped table-bordered" cellspacing="0" width="100%">
+                        <thead>
+                            <tr>
+                                <th>Transaction date</th>
+                                <th>Desription of transaction</th>
+                                <th>Other party</th>
+                                <th>Amount</th>
+                            </tr>
+                        </thead>
+                        <!--<tbody>
+                            {% for transaction in transactions reversed %}
+                              <tr>
+                                <td>{{ transaction.dateTime }}</td>
+                                {% if transaction.description == '0' %}
+                                  <td>Add coins</td>
+                                {% elif transaction.description == '1' %}
+                                  <td>Remove coins</td>
+                                {% elif transaction.description == '2' %}
+                                  <td>Tutorial session payment</td>
+                                {% elif transaction.description == '3' %}
+                                  <td>Tutorial session salary</td>
+                                {% elif transaction.description == '4' %}
+                                  <td>Tutorial session refund</td>
+                                {% else %}
+                                  <td>Florence is a genius</td>
+                                {% endif %}
+                                {% if transaction.session == null %}
+                                  <td>N/A</td>
+                                {% else %}
+                                  <td><a href="javascript:void(0);">{{ transaction.session.id }}</a></td>
+                                {% endif %}
+                                <td>${{ transaction.payment }}</td>
+                              </tr>
+                            {% endfor %}
+                        </tbody>-->
+                    </table>
+                </div>
+              </div>
+                
+            </div>
+        </div>
+    </section>
+
+
+    {% endblock %}
+
+    {% block javascriptinside %}
+    <script>
+    $("#add-coins-btn").on("click", function() {
+            console.log("you clicked me!!");
+    });
+    scheduler.attachEvent("onClick", function (id,event){
+        var event = scheduler.getEvent(id);
+        if(event.isFull == false && event.isPassed == false) {
+          $("#eventID").val(event.id);
+          $("#time_popup").text(event.start_date + ' - ' + event.end_date);
+          $("#university_popup").text(event.university);
+          $("#tutor_popup").text(event.tutorName);
+          var totalPayment = parseInt(event.tutorHourlyRate) + parseInt(event.tutorHourlyRate)*0.05;
+          $("#payment_popup").text(event.tutorHourlyRate + ' (+5%) = $' + totalPayment.toString());
+          $( "#dialog-form" ).dialog();
+        }
+        return true;
+      });
+      
+      /*var transDesc = document.getElementById("trans-desc");
+      transDesc.innerHTML = "All about cats";*/
+    
+    
+      $("#admin_login_link").hover(function() {
+        $(this).css("color", "#f05f40");
+      }, function(){
+        $(this).css("color", "rgba(255,255,255,.3)");
+      });
+      var csrftoken = jQuery("[name=csrfmiddlewaretoken]").val();
+      
+    	$(document).ready(function(){
+    		$('ul.dropdown-menu [data-toggle=dropdown]').on('click', function(event) {
+    			event.preventDefault(); 
+    			event.stopPropagation(); 
+    			$(this).parent().siblings().removeClass('open');
+    			$(this).parent().toggleClass('open');
+    		});
+    		$('#example').DataTable({
+    		  searching: false,
+    		  ordering: false,
+    		  responsive: true,
+    		  bProcessing: true,
+  		    bServerSide: true,
+  		    ajax: {
+  		        url: "getWalletTransactionHistory",
+  		        type: "POST"
+  		    }
+    		  
+    		  
+    		  
+    		  
+    		});
+    	});
+    	
+    </script>
+    <script src="{% static "js/websocket.js" %}"></script>
+    {% endblock %}

@@ -1,0 +1,8 @@
+Dear {{tutor_name}},
+
+Your session (id:{{sID}}) on {{date}} from {{startTime}} to {{endTime}} has been cancelled by {{student_name}}.
+
+Regards,
+Tutoria
+
+

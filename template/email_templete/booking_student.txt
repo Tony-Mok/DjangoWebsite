@@ -1,0 +1,13 @@
+Dear {{student_name}},
+
+You have booked the session (id:{{sID}}) on {{date}} from {{startTime}} to {{endTime}}.
+
+Please note the contact information of your tutor below:
+Name: {{tutor_name}}
+Phone number: {{tutor_phoneNumber}}
+
+Kindly note that you cannot cancel the sessions less than 24 hours from the scheduled start time.
+
+Regards,
+Tutoria
+

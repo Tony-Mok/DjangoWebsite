@@ -1,0 +1,270 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+{% csrf_token %}
+<style>
+    label.error {
+        display:block;
+        width:100%;
+        background:brown;
+    }
+</style>
+{% include "navigation_index.html" %}
+
+    <header class="masthead" style="height:auto;">
+      <div>
+        <section>
+            <div class="container">
+                <div>
+                    <div class="col-xs-12 "  style="margin: 0 auto;">
+                        <div class="form-wrap">
+                            <h1>Register as both Student and Tutor</h1>
+                            <form  action="/tutoria/registerNewStudentTutor/" method="post" id="tutor-registration-form" autocomplete="off", enctype="multipart/form-data">{% csrf_token %}
+                                    <div class="form-group form_group_custom">
+                                        <label for="inputName_first | inputName_last" class="form_label">Name:</label>
+                                        <input type="text" class="form-control" name="inputName_first" id="inputName_first" placeholder="First Name">
+                                        <input type="text" class="form-control" name="inputName_last" id="inputName_last" placeholder="Last Name">
+                                    </div>
+                                    <div class="form-group form_group_custom">
+                                        <label for="inputUsername" class="form_label">Username:</label>
+                                        <input type="text" class="form-control" name="inputUsername" id="inputUsername" placeholder="Username">
+                                    </div>
+                                    <div class="form-group form_group_custom">
+                                        <label for="inputPassword" class="form_label">Password:</label>
+                                        <input type="password" class="form-control" name="inputPassword" id="inputPassword" placeholder="Password">
+                                    </div>
+                                    <div class="form-group form_group_custom">
+                                        <label for="inputConfirmPassword" class="form_label">Confirm Password:</label>
+                                        <input type="password" class="form-control" name="inputConfirmPassword" id="inputConfirmPassword" placeholder="Confirm Password">
+                                    </div>
+                                    <div class="form-group form_group_custom">
+                                        <label for="inputAvatar" class="form_label">Avatar:</label>
+                                        <input type="file" accept="image/*" class="form-control" name="inputAvatar" id="inputAvatar" placeholder="Avatar">
+                                    </div>
+                                    <div class="form-group form_group_custom">
+                                        <label for="inputEmail" class="form_label">Email:</label>
+                                        <input type="email" class="form-control" name="inputEmail" id="inputEmail" placeholder="Email">
+                                    </div>
+                                    <div class="form-group form_group_custom">
+                                        <label for="inputMobilePhone" class="form_label">Mobile Phone:</label>
+                                        <input type="number" class="form-control" name="inputMobilePhone" id="inputMobilePhone" placeholder="Mobile Phone">
+                                    </div>
+                                    <div class="form-group form_group_custom">
+                                        <label for="selectGender" class="form_label">Gender:</label>
+                                        <select class="form-control" id="selectGender" name="selectGender" form="tutor-registration-form">
+                                            <option disabled selected value> -- Select an Option -- </option>                                                
+                                            <option value="Male">Male</option>
+                                            <option value="Female">Female</option>
+                                        </select>
+                                    </div>
+                                    
+                                    <div class="form-group form_group_custom">
+                                        <label for="selectUniversity" class="form_label">University:</label>
+                                        <select class="form-control" id="selectUniversity" name="selectUniversity" form="tutor-registration-form">
+                                            <option disabled selected value> -- Select an Option -- </option>
+                                            {% for university in universityList %}
+                                                <option value="{{university.name}}">{{university.name}}</option>
+                                            {% endfor %}
+                                            
+                                            
+                                        </select>
+                                    </div>
+                                    <div id="form-group-input-university" class="form-group form_group_custom" style="display:none;">
+                                            <label for="inputOtherUniversity" class="form_label">Please enter your university:</label>    
+                                            <input type="text" class="form-control" name="inputOtherUniversity" id="inputMobilePhone" placeholder="University">                                                                                    
+                                    </div>
+                                    <div class="form-group form_group_custom">
+                                        <label for="selectCourseCode" class="form_label">Course Code:</label>
+                                        <select multiple class="form-control" id="selectCourseCode" name="selectCourseCode" form="tutor-registration-form">
+                                            <option disabled selected value> -- Select an Option (Can select more than one course code)-- </option>
+                                           {% for course in courseList %}
+                                                <option value="{{course.courseCode}}">{{course.courseCode}}  {{course.courseName}}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                    <!--<div class="form-group form_group_custom">
+                                        <label for="inputAvatar" class="form_label">Avatar:</label>
+                                        <input type="file" accept="image/*" class="form-control" name="inputAvatar" id="inputAvatar" placeholder="Avatar">
+                                    </div>-->
+                                    <div class="form-group form_group_custom">
+                                        <label for="inputTag" class="form_label">Tag:</label>
+                                        <select multiple class="form-control" id="inputTag" name="inputTag" form="tutor-registration-form">
+                                            <option disabled selected value> -- Select an Option (Can select more than one tags)-- </option>
+                                           <!--{% for tags in subjectTagList %}
+                                                <option value="{{tags.tagName}}">{{tags.tagName}}</option>
+                                            {% endfor %}-->
+                                        </select>
+                                    </div>
+                                    <div class="form-group form_group_custom">
+                                    <input type="text" id="addTags" class="form-control" name="addTags" width="50%"><button type="button" onclick="myFunction()" >Add Tags</button>
+                                    </div>
+                                    <div class="form-group form_group_custom">
+                                        <label for="selectTutorType" class="form_label">Tutor Type:</label>
+                                        <select class="form-control" id="selectTutorType" name="selectTutorType" form="tutor-registration-form" onchange="Check(this);">
+                                            <option disabled selected value> -- Select an Option -- </option>
+                                            <option value="0">Regular Tutor</option>
+                                            <option value="1">Contracted Tutor</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group form_group_custom">
+                                        <label for="inputHourlyRate" class="form_label">Hourly Rate:</label>
+                                        <input type="number" min="10" step="10" class="form-control" name="inputHourlyRate" id="inputHourlyRate" placeholder="Hourly Rate">
+                                    </div>
+                                    <div class="form-group form_group_custom">
+                                        <label for="inputBiography" class="form_label">Biography:</label>
+                                        <textarea id="inputBiography" name="inputBiography" class="form-control" placeholder="Describe yourself here..." style="height:150px; resize:none;" form="tutor-registration-form"></textarea>
+                                    </div>
+                                    <div class="form-group form_group_custom" style="margin-top:15px;margin-bottom:15px;">
+                                      <a href="javascript:submitRegistrationForm()"  class="form-control btn btn-primary btn-lg btn-block">Submit</a>
+                                    </div>
+                            </form>
+                        </div>
+                                      
+                    </div> <!-- /.col-xs-12 -->
+                </div> <!-- /.row -->
+            </div> <!-- /.container -->
+        </section>
+      </div>
+    </header>
+    {% endblock %}
+    {% block javascriptinside %}
+    <script>
+    function myFunction() {
+        var x = document.getElementById("inputTag");
+        var text = document.getElementById("addTags").value;
+        if(text!=""){
+             $('#inputTag').append('<option selected="selected">'+text+'</option>');
+            document.getElementById("addTags").value = '';
+        }
+    }
+    
+    
+        function submitRegistrationForm() {
+          $("#tutor-registration-form").submit();
+        }
+        $("#selectUniversity").change(function() {
+            if($("#selectUniversity").val() === "Other") {
+                $("#form-group-input-university").fadeIn();
+            }else{
+                $("#form-group-input-university").fadeOut();
+            }
+        });
+        $("#selectTutorType").change(function() {
+            if($("#selectTutorType").val() === "1") {
+                $("#inputHourlyRate").val(0)
+                $("#inputHourlyRate").prop('disabled', true);
+            }else{
+                $("#inputHourlyRate").val("")
+                $("#inputHourlyRate").prop('disabled', false);
+            }
+        });
+        
+        $("#admin_login_link").hover(function() {
+            $(this).css("color", "#f05f40");
+        }, function(){
+            $(this).css("color", "rgba(255,255,255,.3)");
+        });
+        
+        $(document).ready(function(){
+
+             $('#inputUsername').focusout(function(){
+                $.ajax({
+                 type:"POST",
+                 url:"/tutoria/usernameExist/",
+                 data: {
+                        'inputUsername': $('#inputUsername').val() // from form
+                        },
+                 success: function(response){
+                   if(response.status == "Fail")
+                      alert(response.msg);
+                }
+              });
+            });
+            
+             $('#inputEmail').focusout(function(){
+                $.ajax({
+                 type:"POST",
+                 url:"/tutoria/emailExist/",
+                 data: {
+                        'inputEmail': $('#inputEmail').val() // from form
+                        },
+                 success: function(response){
+                   if(response.status == "Fail")
+                      alert(response.msg);
+                }
+              });
+            });
+             $('#tutor-registration-form').validate({ // initialize the plugin
+                rules: {
+                    inputName_first :{
+                        required:true
+                    },
+                    inputName_last : {
+                        required:true
+                    },
+                    inputUsername: {
+                        required: true,
+                        minlength: 3
+                    },
+                    inputPassword: {
+                        required: true,
+                        minlength: 5,
+                        pwcheck:true
+                    },
+                   inputConfirmPassword: {
+                        equalTo: "#inputPassword"
+                    },
+                    inputEmail: {
+                      required: true,
+                      email: true
+                    },
+                    inputMobilePhone: {
+                      required: true,
+                      rangelength:[8,8]
+                    },
+                     selectGender:{
+                        required:true
+                    },
+                    inputBiography:{
+                        required:true
+                    },
+                    inputHourlyRate:{
+                        required:true,
+                        special:true
+                    },
+                    selectUniversity:{
+                        required:true
+                    },
+                   selectTutorType:{
+                        required:true
+                    },
+                },
+                 messages: {
+                    inputEmail: {
+                      required: "We need your email address to contact you",
+                    },
+                    inputConfirmPassword: {
+                        equalTo: "The two password does not match"
+                    },
+                    inputMobilePhone: {
+                      rangelength:"the phone number is not valid!(need to be 8 number)"
+                    },
+                    inputPassword: {
+                        pwcheck:"at least one lower and upper case character, at least one digit"
+                    },
+                  }
+            });
+            $.validator.addMethod("pwcheck", function(value) {
+               return /^[A-Za-z0-9\d=!\-@._*]*$/.test(value) // consists of only these
+                   && /[a-z]/.test(value) // has a lowercase letter
+                   && /\d/.test(value) // has a digit
+                   && /[A-Z]/.test(value)
+            });
+            $.validator.addMethod("special", function (value, element) {
+                return this.optional(element) || parseInt(value, 10) % 10 == 0
+            }, 'The value must be a multiple of 10');
+        });
+        
+    </script>
+
+    {% endblock %}

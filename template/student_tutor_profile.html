@@ -1,0 +1,419 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+{% csrf_token %}
+<style>
+  /* Header */
+  .avatar {
+			border-radius: 100%;
+			display: inline-block;
+			margin: 0 0 2em 0;
+			padding: 0.2em;
+			border: solid 0.1px rgba(255, 255, 255, 0.25);
+			background-color: rgba(201, 76, 76, 0.3);
+		}
+
+      .avatar img {
+				border-radius: 100%;
+				display: block;
+				width: 10em;
+				overflow: hidden;
+			}
+
+		@media screen and (min-width: 800px) {
+          #subjectTable{
+            display: none !important;
+          }
+          #tagTable{
+              display: none !important;
+          }
+          
+          #fullTable{
+            display:block !important;
+          }
+		}
+
+		
+		#subjectTable{
+            width:100%;
+    }
+          
+    #tagTable{
+            width:100%;
+    }
+    
+    #fullTable{
+            display:none;
+    }
+		
+		.message {
+        transition: all 0.2s ease;
+        border-radius: 100%;
+        display: inline-block;
+        padding: 0.5em;
+        border: solid 1px rgba(255, 255, 255, 0.25);
+    }
+    .white-popup-block {
+      background: #FFF;
+      padding: 20px 30px;
+      text-align: left;
+      /*max-width: 650px;*/
+      margin: 40px auto;
+      position: relative;
+      border-radius: 6px;
+    }
+
+</style>
+  <link href="{% static "css/message.css" %}" rel="stylesheet">
+  <input type="hidden" id="userID" name="userID" value="{{ userID }}">
+    {% include "navigation.html" %}
+    <header class="masthead masthead-user">
+      <div class="header-content-user" id="header_content">
+        <div style="margin-right:0px;margin-left:0px;width:auto;">
+          
+        </div>
+      </div>
+    </header>
+    
+    <section>
+        <div class="container">
+            <div class="row">
+              <div class="col-lg-12 text-center">
+              <!--<div class="thumb1" style="background: url(/static/media/{{tutorAvatar}}) 50% 50% no-repeat; width: 250px;height: 250px;border-radius: 100%;"></div>-->
+              <div><h3 style="">{{ tutorName }}</h3><hr>
+               {%if userObj.avatar%}
+                            <img src="/static/media/{{userObj.avatar}}" height="250" class="avatar">
+              {% else %}
+                  <img src="/static/media/tutoria_default.png" height="250" class="avatar">
+              {% endif %}
+              <br><h4>{{ tutorUniversity }}</h4><h5><br>Hourly rate: ${{tutorHourlyRate}}</h5>
+              </div>
+              <div>
+                <!--<a href="mailto:{{email}}" class="message"><i class="fa fa-envelope-open" aria-hidden="true" class="message"></i> <strong> email</strong></a>-->
+                <a href="#message-modal" class="message popup-modal"><i class="fa fa-commenting" aria-hidden="true"></i><strong> message</strong></a>
+              </div>
+               <div align="left">
+                  <div id="fullTable" >
+                      <table class="table" cellspacing="0" >
+                        <tr>
+                          <th class="showCourse" style="background:#F0F8FF; width:49%;  border:#00FFFF;"><a href=javascript:void(0);>University courses</a></th>
+                          <th width="1%" style="border:none;"></th>
+                          <th class="showTags" style="background:#F0F8FF; border:#00FFFF;  width:49%;"><a href=javascript:void(0);>Subject Tags</a></th>
+                        </tr>
+                        <tr>
+                          <td>
+                            <ul>
+                                  {% for course in courses|slice:":5" %}
+                                      <li>{{ course.courseCode }} {{ course.courseName }}</li>
+                                  {% endfor %}
+                                  
+                                    <div style="display:none;" id="otherCourse">
+                                    {% for course in courses|slice:"5:" %}
+                                        <li>{{ course.courseCode }} {{ course.courseName }}</li>
+                                    {% endfor %}
+                                     </div>
+                            </ul>
+                          </td>
+                          <td></td>
+                          <td>
+                              <ul>
+                                      {% for tag in tags|slice:":5" %}
+                                                <li>{{ tag.tagName }}</li>
+                                      {% endfor %}
+                                      
+                                        <div style="display:none; clear: left;" id="otherTag">  
+                                          {% for tag in tags|slice:"5:" %}
+                                                    <li>{{ tag.tagName }}</li>
+                                          {% endfor %}
+                                        </div>
+                             </ul>
+                          </td>
+                          </tr>
+                           
+                           </table>
+                     </div>
+              
+                 <div id="subjectTable" >
+                <table class="table" cellspacing="0" style="border-style: solid; border-color:#00FFFF; border-width: thin;" >
+                  <tr>
+                    <th class="showCourse" style="background:#F0F8FF; border-top:none;"><a href=javascript:void(0);>University courses</a></th>
+                  </tr>
+                  <tr>
+                    <td>
+                      <ul>
+                            {% for course in courses|slice:":5" %}
+                                <li>{{ course.courseCode }} {{ course.courseName }}</li>
+                            {% endfor %}
+                            
+                              <div style="display:none;" id="otherCourse2">
+                              {% for course in courses|slice:"5:" %}
+                                  <li>{{ course.courseCode }} {{ course.courseName }}</li>
+                              {% endfor %}
+                               </div>
+                      </ul>
+                    </td>
+                    </tr>
+                     </table>
+                     </div>
+                     <div id="tagTable" >
+              <table class="table" cellspacing="0" style="border-style: solid; border-color:#00FFFF; border-width: thin;">
+                    <th class="showTags" width="48%" style="background:#F0F8FF;border-top:none; "><a href=javascript:void(0);>Subject tags</a></th>
+                    <tr>
+                    <td>
+                        <ul>
+                                {% for tag in tags|slice:":5" %}
+                                          <li>{{ tag.tagName }}</li>
+                                {% endfor %}
+                                
+                                  <div style="display:none; clear: left;" id="otherTag2">  
+                                    {% for tag in tags|slice:"5:" %}
+                                              <li>{{ tag.tagName }}</li>
+                                    {% endfor %}
+                                  </div>
+                       </ul>
+                    </td>
+                  </tr>
+                </table>
+                </div>
+             </div> 
+                          <div >
+                              <h3>Biography</h3><hr>
+                              <p align="left">{{tutorBiography}}</p>
+                          </div>
+                    <center><a class="btn btn-primary btn-xl js-scroll-trigger" href="../../student_booking/{{tutorUserID}}" style="word-wrap:break-word;white-space:pre-wrap;">Book</a></center>
+                </div>
+               </div>
+            </div>
+            </div>
+            
+            </section>
+            
+    <section class="bg-light">
+        <div class="container">
+            <div class="row">
+              <div class="col-lg-12 text-center">        
+                <i class="fa fa-4x fa-pencil-square-o text-primary"></i>
+                <br>
+                <br>
+                <h3> Reviews to this tutor</h2>
+                <hr class="primary">
+                <div class="sr-icons table-responsive" style="margin: auto;">
+                  {% if tutorReviews|length == 0 %}
+                    <p>There are no reviews for {{ tutorName }} at this moment!</p>
+                  {% else %}
+                  {% for review in tutorReviews %}
+                  <table id="example" class="table table-striped table-bordered" cellspacing="0" width="100%">
+                    <tr>
+                      <th width="20%">User</th>
+                      {% if review.anonymous %}
+                        <td width="80%"><i>Anonymous</i></td>
+                      {% else %}
+                        <td width="80%">{{ review.student.user.getFullName }}</td>
+                      {% endif %}
+                    </tr>
+                    <tr>
+                      <th width="20%">Session</th>
+                      <td width="80%">{{review.booking.date}}, {{review.booking.startTime}} - {{review.booking.endTime}}</td>
+                    </tr>
+                    <tr>
+                      <th width="20%">Rating</th>
+                      <td width="80%">
+                        {% if review.rating == null %}
+                          No ratings
+                        {% else %}
+                          <div class="star-ratings-sprite">
+                            <span style="width:{% widthratio review.rating 1 20 %}%" class="star-ratings-sprite-rating"></span>
+                          </div>
+                        {% endif %}
+                      </td>
+                    </tr>
+                    <tr>
+                      <th width="20%">Comment</th>
+                      <td width="80%">{{ review.comment }}</td>
+                    </tr>
+                  </table>
+                  
+                  {% endfor %}
+                  {% endif %}
+                </div>
+              </div>
+            </div>
+        </div>
+    </section>
+    
+    <div id="message-modal"  class="mfp-hide white-popup-block">
+      <div class="container bootstrap snippet">
+        <div class="row">
+        <!--=========================================================-->
+        <!-- selected chat -->
+        	<div class="col-md-8 bg-white messageArea" style="height:600px;">
+                <div>
+                    <ul class="chat"  id="chatArea">
+                    </ul>
+                </div>
+                
+        		</div>
+        		<div class="bg-white" id="inputTextBox">
+                    <form action="javascript:sendMessage()">
+                        <div class="input-group">
+                    		<input class="form-control border no-shadow no-rounded" placeholder="Type your message here" id="inputMessage">
+                    		<span class="input-group-btn">
+                    			<a class="btn btn-primary no-rounded" href="javascript:sendMessage()" id="sendMsgBtn" style="margin-top:4px;">Send</a>
+                    		</span>
+                	    </div>
+                    </form>
+                	
+                </div>
+        	</div>
+        </div>
+      
+      
+      
+    </div>
+
+    {% endblock %}
+
+    {% block javascriptinside %}
+    <script>
+    $("#add-coins-btn").on("click", function() {
+            console.log("you clicked me!!");
+    });
+    scheduler.attachEvent("onClick", function (id,event){
+        var event = scheduler.getEvent(id);
+        if(event.isFull == false && event.isPassed == false) {
+          $("#eventID").val(event.id);
+          $("#time_popup").text(event.start_date + ' - ' + event.end_date);
+          $("#university_popup").text(event.university);
+          $("#tutor_popup").text(event.tutorName);
+          var totalPayment = parseInt(event.tutorHourlyRate) + parseInt(event.tutorHourlyRate)*0.05;
+          $("#payment_popup").text(event.tutorHourlyRate + ' (+5%) = $' + totalPayment.toString());
+          $( "#dialog-form" ).dialog();
+        }
+        return true;
+      });
+      
+      //var transDesc = document.getElementById("trans-desc");
+      //transDesc.innerHTML = "All about cats";
+    
+    
+      $("#admin_login_link").hover(function() {
+        $(this).css("color", "#f05f40");
+      }, function(){
+        $(this).css("color", "rgba(255,255,255,.3)");
+      });
+      
+      
+    	$(document).ready(function(){
+    		$('ul.dropdown-menu [data-toggle=dropdown]').on('click', function(event) {
+    			event.preventDefault(); 
+    			event.stopPropagation(); 
+    			$(this).parent().siblings().removeClass('open');
+    			$(this).parent().toggleClass('open');
+    		});
+    		$('#example').DataTable({searching: true, ordering: false, responsive: true});
+    		
+    		$(".showTags").click(function(){
+      	    if($('#otherTag').css('display') == 'none')
+            {
+              $("#otherTag").show(1000);
+            }
+            else{
+              $("#otherTag").hide(1000);
+            }
+             
+            if($('#otherTag2').css('display') == 'none')
+            {
+              $("#otherTag2").show(1000);
+            }
+            else{
+              $("#otherTag2").hide(1000);
+            }  
+        });
+        
+        $(".showCourse").click(function(){
+      	    if($('#otherCourse').css('display') == 'none')
+            {
+              $("#otherCourse").show(1000);
+            }
+            else{
+              $("#otherCourse").hide(1000);
+            }
+            
+            if($('#otherCourse2').css('display') == 'none')
+            {
+              $("#otherCourse2").show(1000);
+            }
+            else{
+              $("#otherCourse2").hide(1000);
+            }  
+        });
+    	});
+    	
+    	$('.popup-modal').magnificPopup({
+    		type: 'inline',
+    		preloader: false,
+        midClick: true,
+        closeOnBgClick: 'false',
+        enableEscapeKey: 'true',
+        closeBtnInside: true,
+        fixedContentPos: true,
+        alignTop: true,
+    	});
+    	
+    	$('.popup-modal').on('click', function() {
+    	  getMessageHistory({{tutorUserID}});
+    	});
+    	
+    	function getMessageHistory(friendID) {
+    	    $.ajax({
+              url: '../../../message/getMessageHistory',
+              method: 'POST',
+              data: {friendID: friendID, userID: {{userID}} },
+              success: function(result) {
+                  currentReceiverID = friendID;
+                  $("#chatArea").html('');
+                  var messageHistory = result.messageHistory;
+                  txt = "";
+                  for(var i=0 ; i<messageHistory.length ; i++) {
+                      if(messageHistory[i].receiverID == friendID) {
+                          txt += "<li class=\"right clearfix\">";
+                      }else{
+                          txt += "<li class=\"left clearfix\">";
+                      }
+                      txt += "<div class=\"chat-body clearfix\">";
+                      txt += "<div class=\"header\">";
+                      txt += "<strong class=\"primary-font\">"+messageHistory[i].senderName+"</strong>";
+                      txt += "<small class=\"pull-right text-muted\"><i class=\"fa fa-clock-o\"></i> "+messageHistory[i].dateTime+"</small>";
+                      txt += "</div>";
+                      txt += "<p>";
+                      txt += messageHistory[i].content;
+                      txt += "</p>";
+                      txt += "</div>";
+                      txt += "</li>";
+                  }
+                  $('.bounceInDown').removeClass('active');
+                  $("#chat-"+friendID).addClass('active');
+                  $(".messageArea").show();
+                  $("#chatArea").append(txt);
+                  $(".messageArea").scrollTop($(".messageArea")[0].scrollHeight);
+                  $("#inputTextBox").show();
+              }
+            });
+    	}
+    	
+    	function sendMessage() {
+  	        var messageToBeSent = $("#inputMessage").val();
+  	        $("#inputMessage").val("");
+  	        $.ajax({
+                url: '../../../message/sendMessage',
+                method: 'POST',
+                data: {receiverID: '{{tutorUserID}}', senderID: '{{userID}}', messageToBeSent: messageToBeSent },
+                success: function(result) {
+                }
+              });
+	    }
+    	
+    </script>
+    <script src="{% static "js/websocket.js" %}"></script>
+    {% endblock %}

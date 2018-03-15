@@ -1,0 +1,238 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+{% csrf_token %}
+<style>
+  .search_form{
+    padding: 5px;
+  }
+  
+  #showSearch{
+    background:#8B008B;
+    color:white;
+    margin-bottom: 5%;
+  }
+  
+  #showSearch:hover{
+    background:#663399;
+  }
+
+
+</style>
+    <input type="hidden" id="userID" name="userID" value="{{ userID }}">
+    <!-- Navigation -->
+
+    {% include "navigation.html" %}
+    <header class="masthead masthead-user" >
+      <div class="header-content-user" id="header_content">
+        <div style="margin-right:0px;margin-left:0px;width:auto;">
+          
+        </div>
+      </div>
+    </header>
+    <section id="services">
+        <div class="container">
+          <div class="text-center">
+             <h2 class="section-heading">Tutor List</h2>
+            <hr class="primary">
+          </div>
+           <section id="services" style = "padding:20px 0;">
+        <div class="container ">
+          <a href="javascript:void(0);" class="btn btn- btn-block" id="showSearch"><i class="fa fa-filter test-primary" aria-hidden="true"></i> Filter</a>
+        <div id="searchform" style="display:none;">
+            <form method="post" role="form"  id="search-tutor-form" autocomplete="off" class="searchTutorForm" >
+              <table style="width:100%">
+                <tr>
+                  <td width="15%">
+                         <div class="form-group search_form">
+                      <label for="inputName_firs" class="form_label">First name:</label>
+                      <input type="text" class="form-control" name="inputName_first" id="inputName_first" placeholder="First Name">
+                      </div>
+                  </td>
+                  <td width="40%">
+                        <div class="form-group search_form">
+                      <label for="selectUniversity" class="form_label">University:</label>
+                      <select  multiple class="form-control" id="selectUniversity" name="selectUniversity">
+                        <option disabled selected value> -- Select an Option -- </option>
+                        {% for university in universities %}
+                        <option value={{university.id}}>{{university.name}}</option>
+                        {% endfor %}
+                      </select>
+                  </div>
+              </td> 
+                  <td>
+                    <div class="form-group search_form">
+                      <label for="selectTutorType" class="form_label">Tutor Type:</label>
+                      <select multiple class="form-control" id="selectTutorType" name="selectTutorType">
+                          <option disabled selected value> -- Select an Option -- </option>
+                          <option value=0>Regular Tutor</option>
+                          <option value=1>Contracted Tutor</option>
+                      </select>
+                    </div>
+                  </td>
+                  <td width="15%">
+                     
+                   <div class="form-group search_form">
+                        <label for="inputSubjectTag" class="form_label">Subject tag:</label>
+                        <input type="text" class="form-control" name="inputSubjectTag" id="inputSubjectTag" placeholder="Subject Tag">
+                    </div>
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                      <div class="form-group search_form">
+                        <label for="inputName_last" class="form_label">Last name:</label>
+                        <input type="text" class="form-control" name="inputName_last" id="inputName_last" placeholder="Last Name">
+                    </div>
+                    </td>
+                  <td> 
+                    <div class="form-group search_form">
+                        <label for="selectCourseCode" class="form_label">Courses:</label>
+                        <select  multiple class="form-control" id="selectCourseCode" name="selectCourseCode">
+                          <option disabled selected value> -- Select an Option -- </option>
+                          {% for course in courses %}
+                            <option value={{course.id}}>{{course.courseCode}} ({{course.university.name}})</option>
+                          {% endfor %}
+                        </select>
+                    </div>
+                  </td> 
+                  <td>
+                    <div class="form-group search_form">
+                      <label for="selectSorting" class="form_label">Sort by:</label>
+                      <select multiple class="form-control" id="selectSorting" name="selectSorting">
+                          <option disabled selected value> -- Select an Option -- </option>
+                          <option value=0>Sort by Hourly rate</option>
+                          <option value=1>Sort by Average review</option>
+                          <option value=2>Sort by available next week</option>
+                      </select>
+                    </div>
+                  </td>
+                  <td>
+                     <div class="form-group search_form">
+                      <label for="inputMinHourlyRate | inputMaxHourlyRate" class="form_label">Hourly rate:</label>
+                      <input type="number" class="form-control" name="inputMinHourlyRate" id="inputMinHourlyRate" placeholder="From">
+                      <center>-</center>
+                      <input type="number" class="form-control" name="inputMaxHourlyRate" id="inputMaxHourlyRate" placeholder="To">
+                  </div>
+                  </td>
+                </tr>
+              </table>
+
+          </form>
+          <div class="form-group" style="margin-top:15px;margin-bottom:15px;">
+                <a href="javascript:submitSearchFilterForm()"  class="form-control btn btn-primary btn-lg btn-block">Submit</a>
+          </div>
+          
+        </div>
+      </div>
+      
+      
+      
+        <div class="container">
+            <div class="row">
+              <div class="col-lg-12 text-center">
+              <div class="sr-icons table-responsive" style="margin: auto;">
+                  <table id="example" class="table table-striped table-bordered" cellspacing="0" width="100%">
+                        <thead>
+                            <tr>
+                                <th>Tutor's Name</th>
+                                <th>Gender</th>
+                                <th>University</th>
+                                <th>Hourly Rate</th>
+                                <th>Subject tags</th>
+                                <th>Average Review</th>
+                                <th></th>
+                                 <th></th>
+                            </tr>
+                        </thead>
+                
+                    </table>
+                </div>
+            </div>
+          </div>
+            </div>
+        </div>
+    </section>
+    
+    
+    {% endblock %}
+    
+    
+  
+
+
+    {% block javascriptinside %}
+    <script>
+      $("#admin_login_link").hover(function() {
+        $(this).css("color", "#f05f40");
+      }, function(){
+        $(this).css("color", "rgba(255,255,255,.3)");
+      });
+      var form = $("#search-tutor-form");
+      function submitSearchFilterForm() {
+        $('#example').dataTable().fnDestroy();
+        $('#example').DataTable({
+    		    "searching": false, 
+    		    "ordering": false,
+    		    "responsive": true,
+    		    "bProcessing": true,
+    		    "bServerSide": true,
+    		    "ajax": {
+    		        url: "getTutorsList",
+    		        type: "POST",
+    		        data: {'inputName_first': $("#inputName_first").val(), 'inputName_last' : $("#inputName_last").val(), 'selectUniversity[]': $("#selectUniversity").val(), 'selectCourseCode[]': $("#selectCourseCode").val(), 'selectTutorType[]': $("#selectTutorType").val(), 'inputSubjectTag': $("#inputSubjectTag").val(), 'inputMinHourlyRate': $("#inputMinHourlyRate").val(), 'inputMaxHourlyRate': $("#inputMaxHourlyRate").val(),'selectSorting':$("#selectSorting").val() },
+    		    }, 
+    		});
+        $("#example").DataTable().ajax.reload(null, false).order([3, 'desc']).draw();
+      }
+      
+    	$(document).ready(function(){
+    		$('ul.dropdown-menu [data-toggle=dropdown]').on('click', function(event) {
+    			event.preventDefault(); 
+    			event.stopPropagation(); 
+    			$(this).parent().siblings().removeClass('open');
+    			$(this).parent().toggleClass('open');
+    		});
+    		$('#example').DataTable({
+    		    "searching": false, 
+    		    "ordering": false,
+    		    "responsive": true,
+    		    "bProcessing": true,
+    		    "bServerSide": true,
+    		    "ajax": {
+    		        url: "getTutorsList",
+    		        type: "POST",
+    		        dataType: "json",
+    		        data: {'inputName_first': $("#inputName_first").val(), 'inputName_last' : $("#inputName_last").val(), 'selectUniversity': $("#selectUniversity").val(), 'selectCourseCode': $("#selectCourseCode").val(), 'selectTutorType': $("#selectTutorType").val(), 'inputSubjectTag': $("#inputSubjectTag").val(), 'inputMinHourlyRate': $("#inputMinHourlyRate").val(), 'inputMaxHourlyRate': $("#inputMaxHourlyRate").val()},
+    		    },
+    		});
+    	  
+    	  $("#showSearch").click(function(){
+    	    if($('#searchform').css('display') == 'none')
+          {
+            $("#searchform").show(1000);
+          }
+          else{
+            $("#searchform").hide(1000);
+          }
+            
+        });
+        
+        // to prevent anyone sort by more than one indicator
+        var last_valid_selection = null;
+
+          $('#selectSorting').change(function(event) {
+
+            if ($(this).val().length > 1) {
+
+              $(this).val(last_valid_selection);
+            } else {
+              last_valid_selection = $(this).val();
+            }
+          });
+    	  
+    	});
+
+    </script>
+    <script src="{% static "js/websocket.js" %}"></script>
+    {% endblock %}

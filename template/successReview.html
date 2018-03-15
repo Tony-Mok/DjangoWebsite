@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+{% csrf_token %}
+<style>
+  #coinTable{
+    margin-left:auto; 
+    margin-right:auto;
+    width:600px;
+  }
+  
+  #coinTable tr{
+    height: 50px;
+    border-bottom:2px solid #DCDCDC;
+  }
+  
+  @media only screen and (max-width: 600px) {
+    #coinTable {
+        width:100%;
+    }
+}
+</style>
+    <!-- Navigation -->
+{% include "navigation.html" %}
+    <header class="masthead masthead-user">
+      <div class="header-content-user" id="header_content">
+        <div style="margin-right:0px;margin-left:0px;width:auto;">
+          
+        </div>
+      </div>
+    </header>
+    <section>
+      <div class="container" >
+        <center><h2>Review Submitted</h2><br>
+        <a href="../../../../student_home"><h5>Back to home</h5></a></center>
+      
+      </div>
+    </section>
+     
+    {% endblock %}
+    {% block javascriptinside %}
+    <script>
+       var delay = 7000; 
+        setTimeout(function(){ window.location ="../../../../student_home"; }, delay);
+    </script>
+   
+    {% endblock %}

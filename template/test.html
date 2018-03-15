@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+{% csrf_token %}
+    <!-- Navigation -->
+    {% include "navigation.html"}
+
+    <header class="masthead masthead-user">
+      <div class="header-content-user" id="header_content">
+        <div style="margin-right:0px;margin-left:0px;width:auto;">
+          
+        </div>
+      </div>
+    </header>
+    
+    <section id="services">
+        <div class="container">
+            <div class="row">
+              <div class="col-lg-12 text-center">
+              <h2 class="section-heading">For testing</h2>
+              <hr class="primary">
+              <a class="btn btn-success submitButton" href="javascript:void(0);" id = "noti" title="Bootstrap 3 themes generator">Submit</a>
+            </div>
+        </div>
+    </section>
+
+    {% endblock %}
+
+    {% block javascriptinside %}
+        <!-- Notification Plugin -->
+    <script src="{% static "js/notify.js" %}"></script>
+    
+    $('#noti').click(function() {
+      $.notify("Access granted", "success");
+    });
+    
+    
+    
+    
+    {% endblock %}

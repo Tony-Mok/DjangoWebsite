@@ -1,0 +1,23 @@
+{% extends 'websocket/_base.html' %}
+
+{% block content %}{% endblock content %}
+
+{% block script %}
+  <script>
+    var socket = new WebSocket('wss://' + window.location.host + '/{{userID}}');
+
+    socket.onopen = function open() {
+      console.log('WebSockets connection created.');
+      socket.send("hello");
+    };
+
+    if (socket.readyState == WebSocket.OPEN) {
+      socket.onopen();
+    }
+    
+    socket.onmessage = function message(event) {
+        data = event.data;
+        console.log(event);
+    }
+  </script>
+{% endblock script %}

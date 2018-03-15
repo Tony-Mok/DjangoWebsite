@@ -1,0 +1,433 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+{% csrf_token %}
+    <input type="hidden" id="userID" name="userID" value="{{ userID }}">
+    <!-- Navigation -->
+    
+    {% include "navigation.html" %}
+    
+    <header class="masthead masthead-user">
+      <div class="header-content-user" id="header_content">
+        <div style="margin-right:0px;margin-left:0px;width:auto;">
+          
+        </div>
+      </div>
+    </header>
+    
+    <section id="services" style="padding-bottom:10px;">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-12 text-center">
+            <i class="fa fa-4x fa-table text-primary"></i>
+            <br><br>
+            <h2 class="section-heading">{{ tutorName }}'s Schedule</h2>
+            <hr class="primary">
+          </div>
+        </div>
+      </div>
+    </section>
+    
+    <div id="scheduler_here" class="dhx_cal_container" style='width:90%; height:100%;margin:auto;padding-bottom:100px;'>
+      <div class="dhx_cal_navline">
+        <div class="dhx_cal_date"></div>
+      </div>
+      <div class="dhx_cal_header">
+      </div>
+      <div class="dhx_cal_data">
+      </div>
+    </div>
+    
+    <section style="padding-bottom:0px;"></section>
+    
+    <!-- pop up box -->
+    <div id="dialog-form" title="Confirm booking?" style="display:none">
+        <p class="validateTips">All form fields are required.</p>
+        <form>
+            <fieldset>
+                <p id="eventID" hidden></p>
+                <p style="display: inline;"><b>Time:</b> </p>
+                <br>
+                <p style="display: inline;" id="time_popup"></p>
+                <br>
+                <p style="display: inline;"><b>University:</b></p>
+                <br>
+                <p style="display: inline;" id="university_popup"></p>
+                <br>
+                <p style="display: inline;"><b>Tutor:</b></p>
+                <br>
+                <p style="display: inline;" id="tutor_popup"></p>
+                <br>
+                <p id="payment_str" style="display: inline;"><b>Payment:</b></p>
+                <br>
+                <p style="display: inline;" id="payment_popup"></p>
+                <br>
+                <p style="display: inline;"><b>Coupon code:</b></p>
+                <br>
+                <input type="text" id="couponcode_popup_input">
+                <p style="display: inline;" id="couponcode_popup_text" style="display:none;"></p>
+                <br>
+                <!-- Allow form submission with keyboard without duplicating the dialog button -->
+                <input type="submit" tabindex="-1" value="Submit" hidden>
+                <br>
+                <a class="btn btn-primary btn-xl js-scroll-trigger" id="yes_popup" href="javascript:void(0)" style="word-wrap:break-word;white-space:pre-wrap;">Yes</a>
+                <a class="btn btn-primary btn-xl js-scroll-trigger" id="no_popup" href="javascript:void(0)" style="word-wrap:break-word;white-space:pre-wrap;">No</a>
+            </fieldset>
+        </form>
+    </div>
+    
+    <div id="dialog-message" title="Sucessful"  style="display:none">
+      <p id="dialog-booking-message"></p>
+    </div>
+    
+    {% endblock %}
+    
+
+    {% block javascriptinside %}
+    <script>
+      $("#admin_login_link").hover(function() {
+        $(this).css("color", "#f05f40");
+      }, function(){
+        $(this).css("color", "rgba(255,255,255,.3)");
+      });
+      
+    	$(document).ready(function(){
+    		$('ul.dropdown-menu [data-toggle=dropdown]').on('click', function(event) {
+    			event.preventDefault(); 
+    			event.stopPropagation(); 
+    			$(this).parent().siblings().removeClass('open');
+    			$(this).parent().toggleClass('open');
+    		});
+    		
+    	});
+    	var c_lock = true;
+      $("#couponcode_popup_input").focus(function(){
+        c_lock = false;
+      });
+      $("#couponcode_popup_input").focusout(function(){
+        var couponCode = $("#couponcode_popup_input").val();
+        var event = scheduler.getEvent($("#eventID").val());
+        $.ajax({
+        url: 'checkCoupon',
+        data: {coupon:couponCode},
+        type: 'POST',
+        dataType: 'json',
+        success: function (response) {
+            if (response.result == 1){
+              alert("Correct and valid coupon, thanks for support Tutoria.");
+              var totalPayment = parseInt(event.tutorHourlyRate);
+              $("#payment_popup").text(event.tutorHourlyRate + ' (+0%) = $' + totalPayment.toString());
+            }else{
+              if($("#couponcode_popup_input").val()!="")
+              alert("Invalid coupon");
+              $("#couponcode_popup_input").val("");
+              var totalPayment = parseInt(event.tutorHourlyRate) + parseInt(event.tutorHourlyRate)*0.05;
+              if(totalPayment==0){
+            $("#payment_popup").hide();
+            $("#payment_str").hide();
+          }else{
+            $("#payment_popup").text(event.tutorHourlyRate + ' (+5%) = $' + totalPayment.toString());
+            $("#payment_popup").show();
+            $("#payment_str").show();
+          }
+            }
+            c_lock = true;
+            },
+            error: function (error) {
+              console.log(error);
+              c_lock = true;
+            }
+        });
+      });
+      
+      scheduler.attachEvent("onClick", function (id,event){
+        var event = scheduler.getEvent(id);
+        if(event.isFull == false && event.isPassed == false) {
+          $("#yes_popup").css("pointer-events", '');
+          $("#no_popup").css("pointer-events", '');
+          $("#eventID").val(event.id);
+          $("#time_popup").text(event.start_date + ' - ' + event.end_date);
+          $("#university_popup").text(event.university);
+          $("#tutor_popup").text(event.tutorName);
+          var totalPayment = parseInt(event.tutorHourlyRate) + parseInt(event.tutorHourlyRate)*0.05;
+          if(totalPayment==0){
+            $("#payment_popup").hide();
+            $("#payment_str").hide();
+          }else{
+            $("#payment_popup").text(event.tutorHourlyRate + ' (+5%) = $' + totalPayment.toString());
+            $("#payment_popup").show();
+            $("#payment_str").show();
+          }
+          $( "#dialog-form" ).dialog();
+        }
+        return true;
+      });
+      dateTimeReviver = function (key, value) {
+          var a;
+          if (typeof value === 'string') {
+              a = /\/Date\((\d*)\)\//.exec(value);
+          if (a) {
+              return new Date(+a[1]);
+              }
+          }
+          return value;
+      }
+      
+      //get sessons from server side (call getSessions in views.py)
+      var s0 = performance.now();
+        $.ajax({
+        url: 'getSessions',
+        data: {tutorUserID: {{ tutorUserID }}},
+        type: 'POST',
+        dataType: 'json',
+        success: function (response) {
+            var s1 = performance.now();
+            console.log("Call to getSessions took " + (s1 - s0) + " milliseconds.");
+            return response.result;
+            },
+            error: function (error) {
+              console.log(error);
+            }
+      }).then(function(allSessions) {
+        var t0 = performance.now();
+        var n = 0;
+        var events = [];
+        //formatFunc = scheduler.date.date_to_str("%Y-%m-%d %h:%m");
+      	for (var i = 0; i < allSessions.result.length; i++) {
+      	  var startDate = allSessions.result[i].start_date;
+      	  var endDate = allSessions.result[i].end_date;
+      	  var university = allSessions.result[i].university;
+      	  var tutorHourlyRate = allSessions.result[i].tutorHourlyRate;
+      	  var tutorName = allSessions.result[i].tutorName;
+      	  tempEvent = {id:i,pKey:0,start_date: startDate, end_date: endDate, university: university, isFull: false, tutorHourlyRate: tutorHourlyRate, tutorName: tutorName};
+      	  //console.log(tempEvent);
+      	  if(Date.parse(startDate) > Date.parse(new Date()) == true) {
+      	    tempEvent.isPassed = false;
+      	    var currentDate = new Date();
+            currentDate.setDate(currentDate.getDate() + 1);
+      	    if((Date.parse(startDate) > currentDate) == false)
+      	    tempEvent.isPassed = true;
+      	    events.push(tempEvent);
+      	 }
+      	}
+      //console.log(events);
+      var test = JSON.parse(JSON.stringify(events),dateTimeReviver);
+      scheduler.parse(test,"json");
+      //console.log(test);
+      var t1 = performance.now();
+      console.log("Call to addSessions took " + (t1 - t0) + " milliseconds.");
+    	}),
+    	$.ajax({
+        url: 'getFullSession',
+        data: {tutorID:{{tutorUserID}} },
+        type: 'POST',
+        dataType: 'json',
+        success: function (response) {
+            return response.result;
+        },
+        error: function (error) {
+            console.log(error);
+        }
+      }).then(function(allSessions) {
+        var t0 = performance.now();
+        var events = [];
+    	  for (var i = 0; i < allSessions.result.length; i++) {
+      	  tempEvent = {pKey:allSessions.result[i].pKey,start_date: allSessions.result[i].start_date, end_date: allSessions.result[i].end_date,isFull: true, university: allSessions.result[i].universityName}
+      	  if(Date.parse(tempEvent.start_date) > Date.parse(new Date()) == true) {
+      	    tempEvent.isPassed = false;
+      	    events.push(tempEvent);
+      	 }
+      	  //console.log(tempEvent);
+      	  //scheduler.addEvent(tempEvent);
+      	}
+        var test = JSON.parse(JSON.stringify(events),dateTimeReviver);
+        scheduler.parse(test,"json");
+        //console.log(test);
+        var t1 = performance.now();
+        console.log("Call to getFullSession took " + (t1 - t0) + " milliseconds.");
+    	});
+    	
+    	scheduler.attachEvent("onTemplatesReady", function(){
+        scheduler.templates.event_text=function(start,end,event){
+          var txt = "";
+          if(event.isPassed == true) {
+            event.color = "gray";
+            txt += "[Locked : Within 24 hours]" + "<br>";
+          }else if(event.isFull == true) {
+            event.color = "red";
+            txt += "[Booked by other student]" + "<br>";
+          }else{
+            event.color = "green";
+            txt += "[Available]" + "<br>";
+          }
+          return txt;
+        }
+
+        scheduler.templates.event_header = function(start,end,ev){
+          return scheduler.templates.event_date(start) +" - "+ scheduler.templates.event_date(end);
+        };
+        
+      });
+      
+      
+      //This part sets the start of the week = today
+      /*scheduler.config.start_on_monday = false;
+      scheduler.date.week_start=function(date){
+        return this.date_part(this.add(date,0,"day"));
+      }
+      
+      scheduler.config.readonly = true;
+      scheduler.config.hour_size_px = 95;
+      scheduler.config.api_date="%Y-%m-%d %H:%i";
+      scheduler.init('scheduler_here', new Date(),"week");
+      var kvs = {{events|safe}};
+      var events = kvs.result;
+      scheduler.parse("/result.json","json");*/
+            scheduler.config.start_on_monday = false;
+            scheduler.date.week_start=function(date){
+              return this.date_part(this.add(date,0,"day"));
+            }
+            scheduler.config.readonly = true;
+            scheduler.config.hour_size_px = 95;
+            scheduler.config.api_date="%Y-%m-%d %H:%i";
+            
+            scheduler.config.xml_date ="%Y-%m-%d %H:%i";
+            
+            scheduler.init('scheduler_here', new Date(),"week");
+      //marks and blocks dates
+    
+    /*scheduler.addMarkedTimespan({  
+          days:new Date(2017,11,6),
+          zones: [9*60,11*60],
+          css: "gray",
+          type: "dhx_time_block", //the hardcoded value
+          html: "<b>Blocked</b>"
+      });
+    scheduler.updateView();*/
+    
+    
+    //pop up
+    $("#no_popup").click(function() {
+        $("#dialog-form").dialog('close');
+    });
+    
+    $("#yes_popup").click(function() {
+        if(c_lock){
+        $("#yes_popup").css("pointer-events", "none");
+        $("#no_popup").css("pointer-events", "none");
+        var eventID = parseInt($("#eventID").val());
+        var couponCode = $("#couponcode_popup_input").val();
+        var ev = scheduler.getEvent(eventID);
+        var formatFunc = scheduler.date.date_to_str("%Y-%m-%d");
+        var date = formatFunc(ev.start_date);
+        var start_time = scheduler.templates.event_date(ev.start_date);
+        var end_time = scheduler.templates.event_date(ev.end_date);
+        var key = ev.pKey;
+        //console.log(key);
+        $.ajax({
+        url: 'bookSession',
+        data: {pKey:key,date:date,startTime:start_time,endTime:end_time,userID: {{userID}}, tutorUserID:{{tutorUserID}},coupon:couponCode},
+        type: 'POST',
+        dataType: 'json',
+        success: function (response) {
+          if(response.result == 1) {
+            $("#dialog-booking-message").text("You successfully booked a session!");
+            $( "#dialog-message" ).dialog({
+              title: 'Sucessful booking',
+              modal: true,
+              buttons: {
+                Ok: function() {
+                  $( this ).dialog( "close" );
+                  $("#dialog-booking-message").text("");
+                }
+              }
+            });
+            scheduler.getEvent(eventID).isFull = true;
+            scheduler.updateEvent(eventID);
+            $("#dialog-form").dialog('close');
+          }else if(response.result == 0) {
+            $("#dialog-booking-message").text("The session has been booked by others. Please choose another session.");
+            $( "#dialog-message" ).dialog({
+              title: 'Unsuccesful booking',
+              modal: true,
+              buttons: {
+                Ok: function() {
+                  $( this ).dialog( "close" );
+                  $("#dialog-booking-message").text("");
+                }
+              }
+            });
+            scheduler.getEvent(eventID).isFull = true;
+            scheduler.updateEvent(eventID);
+            $("#dialog-form").dialog('close');
+          }else if(response.result == 2) {
+            $("#dialog-booking-message").text("You do not have enough coins in your wallet. Please try to add coins to wallet.");
+            $( "#dialog-message" ).dialog({
+              title: 'Unsuccesful booking',
+              modal: true,
+              buttons: {
+                Ok: function() {
+                  $( this ).dialog( "close" );
+                  $("#dialog-booking-message").text("");
+                }
+              }
+            });
+            $("#dialog-form").dialog('close');
+          }else if(response.result == 3) {
+            $("#dialog-booking-message").text("You cannot book more than one session per day.");
+            $( "#dialog-message" ).dialog({
+              title: 'Unsuccesful booking',
+              modal: true,
+              buttons: {
+                Ok: function() {
+                  $( this ).dialog( "close" );
+                  $("#dialog-booking-message").text("");
+                }
+              }
+            });
+            $("#dialog-form").dialog('close');
+          }else if(response.result == 4) {
+            $("#dialog-booking-message").text("You cannot book a session with start time within 24 hours.");
+            $( "#dialog-message" ).dialog({
+              title: 'Unsuccesful booking',
+              modal: true,
+              buttons: {
+                Ok: function() {
+                  $( this ).dialog( "close" );
+                  $("#dialog-booking-message").text("");
+                }
+              }
+            });
+            $("#dialog-form").dialog('close');
+          }else if(response.result == 5) {
+            $("#dialog-booking-message").text("You cannot book the session offered by you");
+            $( "#dialog-message" ).dialog({
+              title: 'Unsuccesful booking',
+              modal: true,
+              buttons: {
+                Ok: function() {
+                  $( this ).dialog( "close" );
+                  $("#dialog-booking-message").text("");
+                }
+              }
+            });
+            $("#dialog-form").dialog('close');
+          }//
+        },
+        error: function (error) {
+          console.log(error);
+        }
+      });
+    }});
+    
+    $("#dialog-form").on('dialogclose', function(event) {
+        $("#couponcode_popup_text").text();
+        $("#couponcode_popup_input").val("");
+        $("#couponcode_popup_input").show();
+        $("#couponcode_popup_text").hide();
+    });
+      
+
+    </script>
+    <script src="{% static "js/websocket.js" %}"></script>
+{% endblock %}}

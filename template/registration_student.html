@@ -1,0 +1,201 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+{% csrf_token %}
+<style>
+    label.error {
+        display:block;
+        width:100%;
+        background:brown;
+    }
+</style>
+{% include "navigation_index.html" %}
+
+    <header class="masthead" style="height:auto;">
+      <div>
+        <section>
+            <div class="container">
+                <div>
+                    <div class="col-xs-12 "  style="margin: 0 auto;">
+                        <div class="form-wrap">
+                            <h1>Register as Student</h1>
+                            <form  action="/tutoria/registerNewStudent/" method="post" id="student-registration-form" autocomplete="off", enctype="multipart/form-data">{% csrf_token %}
+                                    <div class="form-group form_group_custom">
+                                        <label for="inputName_first | inputName_last" class="form_label">Name:</label>
+                                        <input type="text" class="form-control validate[required]" name="inputName_first" id="inputName_first" placeholder="First Name">
+                                        <input type="text" class="form-control" name="inputName_last" id="inputName_last" placeholder="Last Name">
+                                    </div>
+                                    <div class="form-group form_group_custom">
+                                        <label for="inputUsername" class="form_label">Username:</label>
+                                        <input type="text" class="form-control" name="inputUsername" id="inputUsername" placeholder="Username">
+                                    </div>
+                                    <div class="form-group form_group_custom">
+                                        <label for="inputPassword" class="form_label">Password:</label>
+                                        <input type="password" class="form-control" name="inputPassword" id="inputPassword" placeholder="Password">
+                                    </div>
+                                    <div class="form-group form_group_custom">
+                                        <label for="inputConfirmPassword" class="form_label">Confirm Password:</label>
+                                        <input type="password" class="form-control" name="inputConfirmPassword" id="inputConfirmPassword" placeholder="Confirm Password">
+                                    </div>
+                                    <div class="form-group form_group_custom">
+                                        <label for="inputAvatar" class="form_label">Avatar:</label>
+                                        <input type="file" accept="image/*" class="form-control" name="inputAvatar" id="inputAvatar" placeholder="Avatar">
+                                    </div>
+                                    <div class="form-group form_group_custom">
+                                        <label for="inputEmail" class="form_label">Email:</label>
+                                        <input type="email" class="form-control" name="inputEmail" id="inputEmail" placeholder="Email">
+                                    </div>
+                                    <div class="form-group form_group_custom">
+                                        <label for="inputMobilePhone" class="form_label">Mobile Phone:</label>
+                                        <input type="number" class="form-control" name="inputMobilePhone" id="inputMobilePhone" placeholder="Mobile Phone">
+                                    </div>
+                                    <div class="form-group form_group_custom">
+                                        <label for="selectGender" class="form_label">Gender:</label>
+                                        <select class="form-control" id="selectGender" name="selectGender" form="student-registration-form">
+                                          <option disabled selected value> -- Select an Option -- </option> 
+                                          <option value="Male">Male</option>
+                                          <option value="Female">Female</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group form_group_custom" style="margin-top:15px;margin-bottom:15px;">
+                                      <a href="javascript:submitRegistrationForm()"  class="form-control btn btn-primary btn-lg btn-block">Submit</a>
+                                    </div>
+                            </form>
+                        </div>
+                                      
+                    </div> <!-- /.col-xs-12 -->
+                </div> <!-- /.row -->
+            </div> <!-- /.container -->
+        </section>
+      </div>
+    </header>
+
+    
+    
+    <footer style="padding: 25px 0; text-align: center; color: rgba(255,255,255,.3);background-color: #222;">
+      <div class="container">
+        <ul class="list-inline">
+          <li class="list-inline-item" style="font-size: 12px;"><a id="admin_login_link" href="admin/admin_login.html" style="color: rgba(255,255,255,.3);">Admin Login</a></li>
+        </ul>
+        <p style="font-size: 12px;">&copy; 2017 MyTutors. All Rights Reserved.</p>
+        <p style="font-size: 12px;">Developed by Endeavor Limited</p>
+        <img src="img/web_logo.jpg" height="40" width="40">
+      </div>
+    </footer>
+    {% endblock %}
+    {% block javascriptinside %}
+    
+<!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.4.4/jquery.js" type="text/javascript"></script>
+                <script src="js/jquery.validationEngine-en.js" type="text/javascript" charset="utf-8"></script>
+                <script src="js/jquery.validationEngine.js" type="text/javascript" charset="utf-8"></script>
+                <link rel="stylesheet" href="css/validationEngine.jquery.css" type="text/css"/>-->
+    <script>
+       /* $(document).ready(function(){
+            $("#student-registration-form").validationEngine({'custom_error_messages' : {
+            		'#inputName_first' : {
+            			'required': {
+            				'message': "it cannot be empty!"
+            			}
+            		}
+            }
+          });
+
+       });*/
+           
+        function submitRegistrationForm() {
+          $("#student-registration-form").submit();
+        }
+        $("#admin_login_link").hover(function() {
+            $(this).css("color", "#f05f40");
+        }, function(){
+            $(this).css("color", "rgba(255,255,255,.3)");
+        });
+        
+        $(document).ready(function(){
+            
+            $('#inputUsername').focusout(function(){
+                $.ajax({
+                 type:"POST",
+                 url:"/tutoria/usernameExist/",
+                 data: {
+                        'inputUsername': $('#inputUsername').val() // from form
+                        },
+                 success: function(response){
+                   if(response.status == "Fail")
+                      alert(response.msg);
+                }
+              });
+            });
+            
+            $('#inputEmail').focusout(function(){
+                $.ajax({
+                 type:"POST",
+                 url:"/tutoria/emailExist/",
+                 data: {
+                        'inputEmail': $('#inputEmail').val() // from form
+                        },
+                 success: function(response){
+                   if(response.status == "Fail")
+                      alert(response.msg);
+                }
+              });
+            });
+            
+             $('#student-registration-form').validate({ // initialize the plugin
+                rules: {
+                    inputName_first :{
+                        required:true
+                    },
+                    inputName_last : {
+                        required:true
+                    },
+                    inputUsername: {
+                        required: true,
+                        minlength: 3
+                    },
+                    inputPassword: {
+                        required: true,
+                        minlength: 5,
+                        pwcheck:true
+                    },
+                   inputConfirmPassword: {
+                        equalTo: "#inputPassword"
+                    },
+                    inputEmail: {
+                      required: true,
+                      email: true
+                    },
+                    inputMobilePhone: {
+                      required: true,
+                      rangelength:[8,8]
+                    },
+                     selectGender:{
+                        required:true
+                    }
+                   
+                },
+                 messages: {
+                    inputEmail: {
+                      required: "We need your email address to contact you",
+                    },
+                    inputConfirmPassword: {
+                        equalTo: "The two password does not match"
+                    },
+                    inputMobilePhone: {
+                      rangelength:"the phone number is not valid!(need to be 8 number)"
+                    },
+                    inputPassword: {
+                        pwcheck:"at least one lower and upper case character, at least one digit"
+                    },
+                  }
+                  
+            });
+            $.validator.addMethod("pwcheck", function(value) {
+               return /^[A-Za-z0-9\d=!\-@._*]*$/.test(value) // consists of only these
+                   && /[a-z]/.test(value) // has a lowercase letter
+                   && /\d/.test(value) // has a digit
+                   && /[A-Z]/.test(value)
+            });
+        });
+    </script>
+    {% endblock %}

@@ -1,0 +1,6 @@
+Dear {{student_name}},
+
+You have cancelled the session on {{date}} from {{startTime}} to {{endTime}}.
+
+Regards,
+Tutoria

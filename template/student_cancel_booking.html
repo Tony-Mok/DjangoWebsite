@@ -1,0 +1,155 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+{% csrf_token %}
+    <input type="hidden" id="userID" name="userID" value="{{ userID }}">
+    {% include "navigation.html" %}
+    <header class="masthead masthead-user">
+      <div class="header-content-user" id="header_content">
+        <div style="margin-right:0px;margin-left:0px;width:auto;">
+          
+        </div>
+      </div>
+    </header>
+    
+    <section id="services">
+        <div class="container">
+            <div class="row">
+              <div class="col-lg-12 text-center">
+              <h2 class="section-heading">View/Cancel Booked Sessions</h2>
+              <hr class="primary">
+              <div class="sr-icons table-responsive" style="margin: auto;">
+                    <table id="example" class="table table-striped table-bordered" cellspacing="0" width="100%">
+                        <thead>
+                            <tr>
+                                <th>Session ID</th>
+                                <th>Date</th>
+                                <th>Start time</th>
+                                <th>End time</th>
+                                <th>Tutor</th>
+                                <!--<th>University</th>-->
+                                <th></th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <!--<tbody>
+                            {% for session in sessions %}
+                              <tr>
+                                <td>{{ session.id }}</td>
+                                <td>{{ session.date }}</td>
+                                <td>{{ session.startTime }}</td>
+                                <td>{{ session.endTime }}</td>
+                                <td>{{ session.tutor.user.name }}</td>
+                                <td>{{ session.university }}</td>
+                              <td>
+                                  <div class="star-ratings-sprite">
+                                    <span style="width:52%" class="star-ratings-sprite-rating"></span>
+                                  </div>
+                                </td>
+                                <td><a class="btn btn-primary btn-xl js-scroll-trigger cancelSession" id="{{session.id}}" href="javascript:void(0);" style="word-wrap:break-word;white-space:pre-wrap;">Cancel</a></td>
+                              </tr>
+                            {% endfor %}
+                        </tbody>-->
+                    </table>
+                </div>
+              
+              
+              
+              
+              </div>
+                
+                
+            </div>
+        </div>
+    </section>
+    {% endblock %}
+    
+  
+
+
+    {% block javascriptinside %}
+    <script>
+      $("#admin_login_link").hover(function() {
+        $(this).css("color", "#f05f40");
+      }, function(){
+        $(this).css("color", "rgba(255,255,255,.3)");
+      });
+      
+      /*$(".cancelSession").on('click', function() {
+            var sessionID = $(this).attr("id");
+            var r = confirm("Cancel Session " + sessionID + "?");
+            if(r == true) {
+                $.ajax({
+                url: 'cancelSession',
+                data: {sessionID: sessionID},
+                type: 'POST',
+                dataType: 'json',
+                success: function (response) {
+                    if(response.result == 1) {
+                        alert("Successfully cancelled the session");
+                        location.reload();
+                    }else if(response.result == 2) {
+                        alert("You cannot cancel the booking 24 hours before its start time.");
+                    }
+                },
+                error: function (error) {
+                    console.log(error);
+                }
+              });
+            }
+            
+        });*/
+        
+        function cancelBooking(id) {
+          var sessionID = id;
+          var r = confirm("Cancel Session " + sessionID + "?");
+            if(r == true) {
+                $.ajax({
+                url: 'cancelSession',
+                data: {sessionID: sessionID},
+                type: 'POST',
+                dataType: 'json',
+                success: function (response) {
+                    if(response.result == 1) {
+                        alert("Successfully cancelled the session");
+                        location.reload();
+                    }else if(response.result == 2) {
+                        alert("You cannot cancel the booking 24 hours before its start time.");
+                    }else if(response.result == 3) {
+                        alert("Cancel failure with some server issue.");
+                    }
+                },
+                error: function (error) {
+                    console.log(error);
+                }
+              });
+            }
+        }
+      
+      
+    	$(document).ready(function(){
+    		$('ul.dropdown-menu [data-toggle=dropdown]').on('click', function(event) {
+    			event.preventDefault(); 
+    			event.stopPropagation(); 
+    			$(this).parent().siblings().removeClass('open');
+    			$(this).parent().toggleClass('open');
+    		});
+    		$('#example').DataTable({
+    		  searching: true,
+    		  ordering: false,
+    		  responsive: true,
+    		  "bProcessing": true,
+    		  "bServerSide": true,
+    		  ajax: {
+    		    url: "getBookedSession",
+    		    type: "POST"
+    		  }
+    		  
+    		  
+    		  
+    		});
+    	});
+    	
+    </script>
+    <script src="{% static "js/websocket.js" %}"></script>
+    {% endblock %}

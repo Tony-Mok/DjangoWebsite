@@ -1,0 +1,151 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+{% csrf_token %}
+<style>
+  #coinTable{
+    margin-left:auto; 
+    margin-right:auto;
+    width:600px;
+  }
+  
+  #coinTable tr{
+    height: 50px;
+    border-bottom:2px solid #DCDCDC;
+  }
+  
+  @media only screen and (max-width: 600px) {
+    #coinTable {
+        width:100%;
+    }
+}
+</style>
+    <input type="hidden" id="userID" name="userID" value="{{ userID }}">
+    <!-- Navigation -->
+    {% include "navigation.html" %}
+    <header class="masthead masthead-user">
+      <div class="header-content-user" id="header_content">
+        <div style="margin-right:0px;margin-left:0px;width:auto;">
+          
+        </div>
+      </div>
+    </header>
+    <section>
+      <div class="container" >
+        <center><h2>Add Coins</h2></center>
+        <hr class="primary">
+        <div class="sr-icons" style="margin: auto;">
+                        <center><h4>Balance: ${{ balance }}</h4></center>
+                        <br>
+                      <table id="coinTable" cellspacing="0" width="55%">
+                          
+                          <tbody>
+                            <tr>
+                              <td>
+                                   <h5 width="90%">Add $100</h5>
+                              </td>
+                              <td width="10%">
+                                <a class="btn btn-primary submitButton" href="javascript:void(0);" id="addOneHundred" title="Bootstrap 3 themes generator">Submit</a>
+                              </td>
+                              </tr>
+                              <tr>
+                              <td>
+                                    <h5>Add $200</h5>
+                              </td>
+                              <td>
+                                <a class="btn btn-primary submitButton" href="javascript:void(0);" id="addTwoHundred" title="Bootstrap 3 themes generator">Submit</a>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                    <h5>Add $500</h5>
+                              </td>
+                              <td>
+                                <a class="btn btn-primary submitButton" href="javascript:void(0);" id="addFiveHundred" title="Bootstrap 3 themes generator">Submit</a>
+                              </td>
+                            </tr>
+                            <tr>
+
+                              <td>
+                                <form>
+                                   Add $<input id="amount" type="text" name="fname " style="width:35px;"></input>
+                                </form>
+                              </td>
+                              <td>
+                                <a class="btn btn-primary submitButton" href="javascript:void(0);" id="customAdd" title="Bootstrap 3 themes generator">Submit</a>
+                              </td>
+                            </tr>
+                          </tbody>
+                      </table>
+                  </div>
+      
+      </div>
+    </section>
+     
+    {% endblock %}
+    {% block javascriptinside %}
+    <script>
+      $("#admin_login_link").hover(function() {
+        $(this).css("color", "#f05f40");
+      }, function(){
+        $(this).css("color", "rgba(255,255,255,.3)");
+      });
+      
+    function addCoins(amount){
+       $.ajax({
+        url: 'addCoin',
+        data: { userID:{{userID}}, amount:amount},
+        type: 'POST',
+        dataType: 'json',
+        success: function(data){
+          if(data['status'] == "Success") {
+            //window.location = "../wallet/"+{{userID}};
+            window.location = "wallet";
+          }
+          if(data['status'] == "Fail") {
+            alert("The value is not valid!");
+          }
+          
+        },
+        error: function (error) {
+          console.log("error");
+        }
+    });
+    }
+    
+    $("#addOneHundred").click(function() {
+      addCoins(100);
+    });
+    $("#addTwoHundred").click(function() {
+      addCoins(200);
+    });
+    $("#addFiveHundred").click(function() {
+      addCoins(500);
+    });
+    $("#customAdd").click(function() {
+      var amountOfCoinsAdded = $("#amount").val();
+      if(amountOfCoinsAdded == ""||amountOfCoinsAdded < 1) {
+        alert("Please enter a valid value!");
+      }else{
+        addCoins(amountOfCoinsAdded);
+      }
+      
+    });
+    
+        
+	  $(document).ready(function(){
+    		$('ul.dropdown-menu [data-toggle=dropdown]').on('click', function(event) {
+    			event.preventDefault(); 
+    			event.stopPropagation(); 
+    			$(this).parent().siblings().removeClass('open');
+    			$(this).parent().toggleClass('open');
+    		});
+    		$('#example').DataTable({searching: false});
+    	});
+    	
+    	function Add(){
+    	  $('#amount').submit();
+    	}
+    </script>
+    <script src="{% static "js/websocket.js" %}"></script>
+    {% endblock %}

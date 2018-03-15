@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Tutoria</title>
+    
+    <!-- Bootstrap core CSS -->
+    <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    
+
+    <!-- Custom fonts for this template -->
+    <link href="vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Merriweather:400,300,300italic,400italic,700,700italic,900,900italic' rel='stylesheet' type='text/css'>
+
+    <!-- Plugin CSS -->
+    <link href="vendor/magnific-popup/magnific-popup.css" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="css/creative.min.css" rel="stylesheet">
+    
+    <!-- dataTables style -->
+    <link href="https://cdn.datatables.net/1.10.16/css/dataTables.bootstrap4.min.css" rel="stylesheet">
+    <link href="https://cdn.datatables.net/responsive/2.2.0/css/responsive.bootstrap4.min.css" rel="stylesheet">
+
+    <link href="css/tutoria_style.css" rel="stylesheet">
+
+    <link rel="icon" href="img/web_logo.jpg">
+
+  </head>
+
+  <body id="page-top">
+
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-light fixed-top" id="mainNav">
+      <div class="container">
+        <a class="navbar-brand js-scroll-trigger" href="index.html">Tutoria</a>
+        <a href="javascript:void(0)"><button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation" id="mainNavBtn">
+          <span class="navbar-toggler-icon"></span>
+        </button></a>
+        <div class="collapse navbar-collapse" id="navbarResponsive">
+          <ul class="navbar-nav ml-auto">
+            <li class="nav-item">
+              <a class="nav-link js-scroll-trigger" href="javascript:void(0)">About</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link js-scroll-trigger" href="javascript:void(0)">Services</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link js-scroll-trigger" href="javascript:void(0)">Notification</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link js-scroll-trigger" href="javsacript:void(0)">Logout</a>
+            </li>
+            <li class="dropdown nav-item" id="studentMenu"><a href="javascript:void(0)" class="dropdown-toggle nav-link" data-toggle="dropdown">Student Menu</a>
+				<ul class="dropdown-menu">
+					<li><a href="javascript:void(0)">Course History</a></li>
+					<li><a href="javascript:void(0)">Wallet</a></li>
+					<li><a href="javascript:void(0)">Update Personal Info</a></li>
+					<li><a href="javascript:void(0)">View/Cancel Booked Sessions</a></li>
+					<li><a href="javascript:void(0)">Messenger</a></li>
+					<li><a href="javascript:void(0)">Use as Tutor</a></li>
+				</ul>
+			</li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+    <header class="masthead masthead-user">
+      <div class="header-content-user" id="header_content">
+        <div style="margin-right:0px;margin-left:0px;width:auto;">
+          
+        </div>
+      </div>
+    </header>
+    
+    <section id="services">
+        <div class="container">
+          <div class="row">
+            <div class="col-lg-12 text-center">
+              <h2 class="section-heading">View/Cancel booked session</h2>
+              <hr class="primary">
+            </div>
+          </div>
+        </div>
+        <div class="container">
+            <div class="row">
+                
+                <div class="sr-icons table-responsive" style="margin: auto;">
+                    <table id="example" class="table table-striped table-bordered" cellspacing="0" width="100%">
+                        <thead>
+                            <tr>
+                                <th>University</th>
+                                <th>Course Code</th>
+                                <th>Tutor</th>
+                                <th>Time</th>
+                                <th>Cancel the session</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>HKU</td>
+                                <td>COMP3297</td>
+                                <td>Florence Tsang</td>
+                                <td>2017-09-27<br>17:00-18:00</td>
+                                <!--<td><button class="btn btn-success" onclick="cancelPop()">Cancel</button></td>-->
+                                <td>
+                               </td>
+                            </tr>
+                            <tr>
+                                <td>HKU</td>
+                                <td>COMP2123</td>
+                                <td>Mary Chan</td>
+                                <td>2017-09-25<br>19:00-20:00</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>HKU</td>
+                                <td>COMP2119</td>
+                                <td>Tony Mok</td>
+                                <td>2017-09-24<br>19:00-20:00</td>
+                                <td></td>
+                            </tr>
+                           
+                        </tbody>
+                    </table>
+                    <p style="color:red;"><br>* You cannot cancel sessions less than 24 hours from the scheduled start time</p>
+                </div>
+                
+            </div>
+            
+        </div>
+        
+    </section>
+    
+    <footer style="padding: 25px 0; text-align: center; color: rgba(255,255,255,.3);background-color: #222;">
+      <div class="container">
+        <ul class="list-inline">
+          <li class="list-inline-item" style="font-size: 12px;"><a id="admin_login_link" href="admin/admin_login.html" style="color: rgba(255,255,255,.3);">Admin Login</a></li>
+        </ul>
+        <p style="font-size: 12px;">&copy; 2017 MyTutors. All Rights Reserved.</p>
+        <p style="font-size: 12px;">Developed by Endeavor Limited</p>
+        <img src="img/web_logo.jpg" height="40" width="40">
+      </div>
+    </footer>
+
+    <!-- Bootstrap core JavaScript -->
+    <script src="vendor/jquery/jquery.min.js"></script>
+    <script src="vendor/popper/popper.min.js"></script>
+    <script src="vendor/bootstrap/js/bootstrap.min.js"></script>
+    
+    <!-- Plugin JavaScript -->
+    <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
+    <script src="vendor/scrollreveal/scrollreveal.min.js"></script>
+    <script src="vendor/magnific-popup/jquery.magnific-popup.min.js"></script>
+    
+    <!-- DataTables JavaScript -->
+    <script src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.16/js/dataTables.bootstrap4.min.js"></script>
+    <script src="https://cdn.datatables.net/responsive/2.2.0/js/dataTables.responsive.min.js"></script>
+    <script src="https://cdn.datatables.net/responsive/2.2.0/js/responsive.bootstrap4.min.js"></script>
+
+    <!-- Custom scripts for this template -->
+    <script src="js/creative.min.js"></script>
+    
+    <script>
+      $("#admin_login_link").hover(function() {
+        $(this).css("color", "#f05f40");
+      }, function(){
+        $(this).css("color", "rgba(255,255,255,.3)");
+      });
+      
+      
+    	$(document).ready(function(){
+    		$('ul.dropdown-menu [data-toggle=dropdown]').on('click', function(event) {
+    			event.preventDefault(); 
+    			event.stopPropagation(); 
+    			$(this).parent().siblings().removeClass('open');
+    			$(this).parent().toggleClass('open');
+    		});
+        $('#example').DataTable({searching: true, ordering: false, responsive: true});
+    	});
+    	
+    	function cancelPop() {
+        if (confirm("Confirm?") == true) {
+            //do sth to remove data from database
+        }
+      }
+    	
+    </script>
+  </body>
+
+</html>

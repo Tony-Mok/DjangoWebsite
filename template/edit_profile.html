@@ -1,0 +1,553 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+{% csrf_token %}
+<style>
+  label.error {
+        color:green;
+        font-weight: bold;
+    }
+</style>
+   
+    <input type="hidden" id="userID" name="userID" value="{{ userObj.id }}">
+   
+    {% include "navigation.html" %}
+
+    <header class="masthead masthead-user">
+      <div class="header-content-user" id="header_content">
+        <div style="margin-right:0px;margin-left:0px;width:auto;">
+          
+        </div>
+      </div>
+    </header>
+     <a href="javascript:void(0);" class=" btn-block  text-center" id="showPersonal" style="background:#708090; color:white; padding:20px; display:none;"><span><h2>Update Personal INFO</h2></span></a>
+    <section  id="Personal">
+        <div class="container">
+            <div class="row">
+              <div class="col-lg-12 text-center">
+              <i class="fa fa-4x fa-address-card-o text-primary"></i>
+              <br><br>
+              <h2 class="section-heading">Update My Personal Details</h2>
+              <hr class="primary">
+                <div class="sr-icons table-responsive" style="margin: auto;" align="left" >
+
+                    <form  action="javascript:updateInfo();" method="post" id="update-profile" autocomplete="off" enctype="multipart/form-data">{% csrf_token %}
+                            <div class="form-group form_group_custom">
+                                <label for="inputName_first | inputName_last" class="form_label">Name:</label>
+                                <input type="text" class="form-control validate[required]" name="inputName_first" id="inputName_first" placeholder="First Name" value="{{userObj.firstname}}">
+                                <input type="text" class="form-control" name="inputName_last" id="inputName_last" placeholder="Last Name" value="{{userObj.lastname}}">
+                            </div>
+                            <div class="form-group form_group_custom">
+                                <label for="inputUsername" class="form_label">Username:</label>
+                                <input type="text" class="form-control" name="inputUsername" id="inputUsername" placeholder="Username" value="{{userObj.username}}">
+                            </div>
+                            <div class="form-group form_group_custom">
+                                <label for="inputAvatar" class="form_label">Avatar:</label>
+                                <!-- <img src="/static/media/{{userObj.avatar}}" height="150"> -->
+                                <input type="file" accept="image/*" class="form-control" name="inputAvatar" id="inputAvatar">
+                            </div>
+                            <div class="form-group form_group_custom">
+                                <label for="inputEmail" class="form_label">Email:</label>
+                                <input type="email" class="form-control" name="inputEmail" id="inputEmail" placeholder="Email" value="{{userObj.email}}">
+                            </div>
+                            <div class="form-group form_group_custom">
+                                <label for="inputMobilePhone" class="form_label">Mobile Phone:</label>
+                                <input type="number" class="form-control" name="inputMobilePhone" id="inputMobilePhone" placeholder="Mobile Phone" value="{{userObj.phoneNumber}}">
+                            </div>
+                            <div class="form-group form_group_custom">
+                                <label for="selectGender" class="form_label">Gender:</label>
+                                <select class="form-control" id="selectGender" name="selectGender" form="update-profile">
+                                  
+                                  {% if userObj.gender == "Male"  %}
+                                    <option selected="selected" value = "Male">Male</option>
+                                    <option value="Female">Female</option>
+                                  {% else %}
+                                    <option value = "Male">Male</option>
+                                    <option selected="selected" value="Female">Female</option>
+                                  {% endif %}
+                                </select>
+                            </div>
+                            <div class="form-group form_group_custom" style="margin-top:15px;margin-bottom:15px;">
+                              <a href="javascript:submitProfileUpdate()"  class="form-control btn btn-primary btn-lg btn-block">Update Profile</a>
+                            </div>
+                    </form>
+                    
+                    <br>
+                    
+                    
+                </div>
+                </section>
+                <a href="javascript:void(0);" class=" btn-block  text-center" id="showPW" style="background:#4682B4; color:white; padding:20px; "><span><h2>Update Password</h2></span></a>
+                <section id="PW" style="display:none;">
+                    <div class="container">
+                <div class="row">
+                  <div class="col-lg-12 text-center">
+                      <i class="fa-key fa fa-4x text-primary" aria-hidden="true"></i>
+              <h2 class="section-heading">Change Password</h2>
+              <hr class="primary">
+                <div class="sr-icons table-responsive" style="margin: auto;" align="left">
+
+                    <form  action="javascript:changePassword();" method="post" id="update-password" autocomplete="off">{% csrf_token %}
+                           
+                            <div class="form-group form_group_custom">
+                                <label for="inputOldPassword" class="form_label">Current password:</label>
+                                <input type="password" class="form-control" name="inputOldPassword" id="inputOldPassword" placeholder="Current Password">
+                            </div>
+                            <div class="form-group form_group_custom">
+                                <label for="inputPassword" class="form_label">New password:</label>
+                                <input type="password" class="form-control" name="inputPassword" id="inputPassword" placeholder="New Password">
+                            </div>
+                            <div class="form-group form_group_custom">
+                                <label for="inputConfirmPassword" class="form_label">Confirm new password:</label>
+                                <input type="password" class="form-control" name="inputConfirmPassword" id="inputConfirmPassword" placeholder="Confirm New Password">
+                            </div>
+                            <div class="form-group form_group_custom" style="margin-top:15px;margin-bottom:15px;">
+                              <a href="javascript:submitPasswordForm()"  class="form-control btn btn-primary btn-lg btn-block">Change Password</a>
+                            </div>
+                    </form>
+                    
+                    <br>
+                    </div>
+                   </div> 
+                </div>
+                
+
+            </section>
+            
+             {% if role.isTutor %}
+              <a href="javascript:void(0);" class=" btn-block  text-center" id="showTUT" style="background:#008080; color:white; padding:20px;"><span><h2>Update Tutor INFO</h2></span></a>
+            <section id="TUT"  style="display:none;">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-lg-12 text-center">
+                           <i class="fa fa-4x fa-id-badge" aria-hidden="true"></i>
+                            <h2 class="section-heading">Update My Tutor Profile</h2>
+              <hr class="primary">
+                <div class="sr-icons table-responsive" style="margin: auto;" align="left">
+                    <form  action="javascript:updateTutorInfo();" method="post" id="tutor-info" autocomplete="off", enctype="multipart/form-data">{% csrf_token %}
+                                    
+                            <div class="form-group form_group_custom">
+                                <label for="selectUniversity" class="form_label">University:</label>
+                                <select class="form-control" id="selectUniversity" name="selectUniversity" form="tutor-info">
+                                    {% for university in universityList %}
+                                        {% if tutorInfo.tutorObj.university.name == university.name  %}
+                                          <option selected="selected" value="{{university.name}}">{{university.name}}</option>
+                                          {% else %}
+                                          <option value="{{university.name}}">{{university.name}}</option>
+                                        {% endif %}
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div id="form-group-input-university" class="form-group form_group_custom" style="display:none;">
+                                    <label for="inputOtherUniversity" class="form_label">Please enter your university:</label>    
+                                    <input type="text" class="form-control" name="inputOtherUniversity" id="inputMobilePhone" placeholder="University">                                                                                    
+                            </div>
+                            <div class="form-group form_group_custom">
+                                <label for="selectCourseCode" class="form_label">Course Code:</label>
+                                <select multiple class="form-control" id="selectCourseCode" name="selectCourseCode" form="tutor-info">
+                                    <option disabled selected value> -- Select an Option (Can select more than one course code)-- </option>
+                                    {% for course in Allcourse %}<!-- all courses from the db-->
+                                        {% if course in tutorInfo.courses  %}
+                                            <option selected="selected" value="{{course.courseCode}}">{{course.courseCode}} {{course.courseName}}</option>
+                                         {% else %}
+                                          <option value="{{course.courseCode}}">{{course.courseCode}} {{course.courseName}}</option>
+                                        {% endif %}
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="form-group form_group_custom">
+                                <label for="inputTag" class="form_label">Tag:</label>
+                                <select multiple class="form-control" id="inputTag" name="inputTag" form="tutor-info">
+                                    <option disabled selected value> -- Select an Option (Can select more than one tags)-- </option>
+                                    {% for tags in tutorInfo.tags %}<!-- the tag of ther user-->
+                                        <option value="{{tags.tagName}}" selected="selected">{{tags.tagName}}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            
+                            <div class="form-group form_group_custom">
+                            <center><input type="text" id="addTags" class="form-control" name="addTags" width="50%"><button type="button" class="btn btn-secondary" onclick="myFunction()" >Add Tags</button></center>
+                            </div>
+                            
+                            <div class="form-group form_group_custom">
+                                <label for="selectTutorType" class="form_label">Tutor Type:</label>
+                                <select class="form-control" id="selectTutorType" name="selectTutorType" form="tutor-info">
+                                        {% if tutorInfo.tutorObj.tutorType == 0  %}
+                                            <option selected="selected" value="0">Regular Tutor</option>
+                                            <option value="1">Contracted Tutor</option>
+                                        {% else %}
+                                            <option value="0">Regular Tutor</option>
+                                            <option selected="selected" value="1">Contracted Tutor</option>
+                                        {% endif %}
+
+                                </select>
+                            </div>
+                            <div class="form-group form_group_custom">
+                                <label for="inputHourlyRate" class="form_label">Hourly Rate:</label>
+                                <input type="number" class="form-control" name="inputHourlyRate" id="inputHourlyRate" placeholder="Hourly Rate" value="{{tutorInfo.tutorObj.hourlyRate}}" >
+                            </div>
+                            <div class="form-group form_group_custom">
+                                <label for="inputBiography" class="form_label">Biography:</label>
+                                <textarea id="inputBiography" name="inputBiography" class="form-control" placeholder="Describe yourself here..." style="height:150px; resize:none;" form="tutor-info">{{tutorInfo.tutorObj.biography}}</textarea>
+                            </div>
+                            <div class="form-group form_group_custom">
+                                <label for="inputActive" class="form_label">I am currently: </label>
+
+                                <select class="form-control" id="inputActive" name="inputActive" form="tutor-info">
+                                    {% if tutorInfo.tutorObj.activated %}
+                                    <option selected="selected" value = "1">Active</option>
+                                    <option value="0">Deactive</option>
+                                    {% else %}
+                                    <option value = "1">Active</option>
+                                    <option selected="selected" value="0">Deactive</option>
+                                    {% endif %}
+                                </select>
+                                <p>(If you deactivate you profile, you would not appear in serach results when students are seeking a tutor.)</p>
+                            </div>
+                            <div class="form-group form_group_custom" style="margin-top:15px;margin-bottom:15px;">
+                              <a href="javascript:submitTutorUpdate()"  class="form-control btn btn-primary btn-lg btn-block">Submit</a>
+                            </div>
+                    </form>
+                    
+                </div>
+
+                      
+                        </div>
+            </section>
+        {% endif %}
+    {% endblock %}
+
+    {% block javascriptinside %}
+    <script>
+
+      $("#admin_login_link").hover(function() {
+        $(this).css("color", "#f05f40");
+      }, function(){
+        $(this).css("color", "rgba(255,255,255,.3)");
+      });
+      
+
+      /*if($(window).width() < 992) {
+        $("#sidebar").hide();
+        $("#studentMenu").show();
+      }else{
+        $("#sidebar").show();
+        $("#studentMenu").hide();
+      }
+      $("#sidebar").hide();
+      $("#header_content").css("right", $("#sidebar_content").width()+18+10);*/
+      
+      //$(".masthead-user").css("min-height", $("#search_bar_form_group").height()+130);
+      $(window).resize(function() {
+        
+        /*if($(window).width() < 992) {
+          $("#sidebar").hide();
+          $("#studentMenu").show();
+        }else{
+          $("#sidebar").show();
+          $("#studentMenu").hide();
+        }
+        $("#header_content").css("right", $("#sidebar_content").width()+18+10);*/
+        //$(".masthead-user").css("min-height", $("#search_bar_form_group").height()+130);
+      });
+      
+      
+    	$(document).ready(function(){
+    	    var username = $("#inputUsername").val();//get the original username
+    	    var email = $("#inputEmail").val();//get the original email
+    	    
+    	    if($("#selectTutorType").val() === "1") {
+                $("#inputHourlyRate").val(0)
+                $("#inputHourlyRate").prop('disabled', true);
+            }else{
+                $("#inputHourlyRate").prop('disabled', false);
+            }
+
+    	    $('#tutor-info').validate({ // initialize the plugin
+                rules: {
+                     selectGender:{
+                        required:true
+                    },
+                    inputBiography:{
+                        required:true
+                    },
+                    inputHourlyRate:{
+                        required:true,
+                        special:true
+                    },
+                    selectUniversity:{
+                        required:true
+                    },
+                   selectTutorType:{
+                        required:true
+                    },
+                },
+                
+                  
+            });
+            $.validator.addMethod("pwcheck", function(value) {
+               return /^[A-Za-z0-9\d=!\-@._*]*$/.test(value) // consists of only these
+                   && /[a-z]/.test(value) // has a lowercase letter
+                   && /\d/.test(value) // has a digit
+                   && /[A-Z]/.test(value)
+            });
+            $.validator.addMethod("special", function (value, element) {
+                return this.optional(element) || parseInt(value, 10) % 10 == 0
+            }, 'The value must be a multiple of 10');
+    	    
+    		$('ul.dropdown-menu [data-toggle=dropdown]').on('click', function(event) {
+    			event.preventDefault(); 
+    			event.stopPropagation(); 
+    			$(this).parent().siblings().removeClass('open');
+    			$(this).parent().toggleClass('open');
+    		});
+    		
+    		$('#example').DataTable({searching: true, ordering: false, responsive: true});
+    		
+    		$('#inputUsername').focusout(function(){
+                if(this.value!=username){
+                        $.ajax({
+                         type:"POST",
+                         url:"/tutoria/usernameExist/",
+                         data: {
+                                'inputUsername': $('#inputUsername').val() // from form
+                                },
+                         success: function(response){
+                           if(response.status == "Fail")
+                              alert(response.msg);
+                        }
+                      });
+                }
+            });
+            
+            $('#inputEmail').focusout(function(){
+                if(this.value!=email){
+                    $.ajax({
+                     type:"POST",
+                     url:"/tutoria/emailExist/",
+                     data: {
+                            'inputEmail': $('#inputEmail').val() // from form
+                            },
+                     success: function(response){
+                       if(response.status == "Fail")
+                          alert(response.msg);
+                    }
+                  });
+                }
+            });
+    		
+    		 $('#update-profile').validate({ // initialize the plugin
+                rules: {
+                    inputName_first :{
+                        required:true
+                    },
+                    inputName_last : {
+                        required:true
+                    },
+                    inputUsername: {
+                        required: true,
+                        minlength: 3
+                    },
+                    inputEmail: {
+                      required: true,
+                      email: true
+                    },
+                    inputMobilePhone: {
+                      required: true,
+                      rangelength:[8,8]
+                    },
+                     selectGender:{
+                        required:true
+                    }
+                   
+                },
+                 messages: {
+                    inputEmail: {
+                      required: "We need your email address to contact you",
+                    },
+                    inputConfirmPassword: {
+                        equalTo: "The two password does not match"
+                    },
+                    inputMobilePhone: {
+                      rangelength:"the phone number is not valid!(need to be 8 number)"
+                    },
+                    inputPassword: {
+                        pwcheck:"at least one lower and upper case character, at least one digit"
+                    },
+                  }
+                  
+            });
+            
+            $('#update-password').validate({ // initialize the plugin
+                rules: {
+                    inputPassword: {
+                        required: true,
+                        minlength: 5,
+                        pwcheck:true
+                    },
+                   inputConfirmPassword: {
+                        equalTo: "#inputPassword"
+                    }
+                   
+                },
+                 messages: {
+
+                    inputConfirmPassword: {
+                        equalTo: "The two password does not match"
+                    },
+                    inputPassword: {
+                        pwcheck:"at least one lower and upper case character, at least one digit"
+                    },
+                  }
+                  
+            });
+            $.validator.addMethod("pwcheck", function(value) {
+               return /^[A-Za-z0-9\d=!\-@._*]*$/.test(value) // consists of only these
+                   && /[a-z]/.test(value) // has a lowercase letter
+                   && /\d/.test(value) // has a digit
+                   && /[A-Z]/.test(value)
+            });
+            
+    	});
+    	
+    		$("#selectTutorType").change(function() {
+            if($("#selectTutorType").val() === "1") {
+                $("#inputHourlyRate").val(0);
+                $("#inputHourlyRate").prop('disabled', true);
+            }else{
+                $("#inputHourlyRate").prop('disabled', false);
+            }
+        });
+    	
+    	 function myFunction() {
+        var x = document.getElementById("inputTag");
+        //var option = document.createElement("option");
+        var text = document.getElementById("addTags").value;
+        if(text!=""){
+            //option.text = text;
+            $('#inputTag').append('<option selected="selected">'+text+'</option>');
+            //x.add(option);
+            document.getElementById("addTags").value = '';
+        }
+    }
+    
+     $("#showPersonal").click(function(){
+    	    if($('#Personal').css('display') == 'none')
+          {
+            $("#Personal").show();
+            $("#PW").hide();
+            $("#TUT").hide();
+             $("#showPersonal").hide();
+             $("#showPW").show().delay(1000);
+              $("#showTUT").show().delay(1000);
+          }
+          
+            
+        });
+        
+         $("#showPW").click(function(){
+    	    if($('#PW').css('display') == 'none')
+          {
+            $("#PW").show();
+            $("#Personal").hide();
+            $("#TUT").hide();
+             $("#showPersonal").show();
+            $("#showPW").hide();
+              $("#showTUT").show().delay(1000);
+          }
+
+        });
+        
+         $("#showTUT").click(function(){
+    	    if($('#TUT').css('display') == 'none')
+          {
+            $("#TUT").show();
+            $("#Personal").hide();
+            $("#PW").hide();
+             $("#showPersonal").show();
+            $("#showPW").show();
+              $("#showTUT").hide();
+          }
+
+        });
+        
+          function updateInfo() {
+            var form = $("#update-profile");
+        
+            $.ajax({
+                url: '/tutoria/update_info/',
+                data: form.serialize()+"&userID=" + {{ userObj.id }},
+                type: 'POST',
+                dataType: 'json',
+                success: function (response) {
+                    if(response.status == "Fail")
+                      alert(response.msg);
+                     else{
+                         alert("success");
+                         window.location="";
+                     }
+                },
+                error: function (error) {
+                    alert("error")
+                }
+            });
+        }
+        
+        function submitProfileUpdate() {
+          $("#update-profile").submit();
+        }
+        
+        function submitPasswordForm(){
+            $("#update-password").submit();
+        }
+        
+        function changePassword(){
+            var form = $("#update-password");
+        
+            $.ajax({
+                url: '/tutoria/change_password/',
+                data: form.serialize()+"&userID=" + {{ userObj.id }},
+                type: 'POST',
+                dataType: 'json',
+                success: function (response) {
+                    if(response.status == "Fail")
+                      alert(response.msg);
+                     else{
+                         alert("success");
+                         window.location="";
+                     }
+                },
+                error: function (error) {
+                    alert("error")
+                }
+            });
+        }
+        
+        function submitTutorUpdate(){
+            $("#tutor-info").submit();
+        }
+        
+          function updateTutorInfo() {
+            var form = $("#tutor-info");
+        
+            $.ajax({
+                url: '/tutoria/update_tutor_info/',
+                data: form.serialize()+"&userID=" + {{ userObj.id }},
+                type: 'POST',
+                dataType: 'json',
+                success: function (response) {
+                    if(response.status == "Fail")
+                      alert(response.msg);
+                     else{
+                         alert("success");
+                         window.location="";
+                     }
+                },
+                error: function (error) {
+                    alert("error")
+                }
+            });
+        }
+    </script>
+    <script src="{% static "js/websocket.js" %}"></script>
+    {% endblock %}
