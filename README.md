@@ -1,3 +1,3 @@
 # DjangoWebsite
 
-It is a group assignment for COMP3297. Not for business use.
+It is a group assignment for software engineering course. Not for business use.
