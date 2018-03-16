@@ -1,6 +1,6 @@
 # DjangoWebsite
 
-It is a group assignment for software engineering course. Not for business use.
+It is a group assignment for software engineering course in 2017. Not for business use. Copyright by Endeavor.
 
 ## About this tutor-broking system demo:
 ### 1. Booking a tutorial session via the platform:
