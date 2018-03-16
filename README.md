@@ -10,4 +10,6 @@ Tutoria provides real-time notification, which will be triggered by certain acti
 ### 3. Automatically close the session and transfer the payment after finishing a tutorial session.
 Tutoria wants to make an effort to give the most efficient transaction. This part is implemented by [Celery API](http://www.celeryproject.org/) for Django, to update the database automatically.
 ### 4. [Instant messenger](https://github.com/Felixho19/DjangoWebsite/blob/master/template/chat_room.html)
-Tutoria provides a messenger for students to communicate with tutors instantly. This part is implemented by AJAX and JSON, working with the python back-end coding, to finish the necessary functions. 
+Tutoria provides a messenger for students to communicate with tutors instantly. This part is implemented by AJAX and JSON, working with the python back-end coding, to finish the necessary functions.
+### 5. Showing data by DataTable
+Tutoria shows the available course list and several types of record history by implementing [DataTable API](https://datatables.net/reference/api/), providing a nice layout to show the data taken from database.
