@@ -1,6 +1,7 @@
 # DjangoWebsite
 
 It is a group assignment for software engineering course in 2017. Not for business use. Copyright by Endeavor.
+It is developed via c3.io.
 
 ## About this tutor-broking system demo:
 ### 1. Booking a tutorial session via the platform:
