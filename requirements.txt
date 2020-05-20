@@ -30,7 +30,7 @@ ephem==3.7.6.0
 h2==3.0.1
 hpack==3.0.0
 html5lib==0.999
-httplib2==0.8
+httplib2==0.18.0
 hyperframe==5.1.0
 hyperlink==17.3.1
 idna==2.6
