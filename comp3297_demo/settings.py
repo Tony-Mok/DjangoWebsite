@@ -43,7 +43,7 @@ SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 INSTALLED_APPS = [
     #'djcelery',
     #'djcelery_email',
-    'tutoria.apps.TutoriaConfig',
+    #'tutoria.apps.TutoriaConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
