@@ -44,7 +44,7 @@ PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
 INSTALLED_APPS = [
     #'djcelery',
     #'djcelery_email',
-    #'tutoria.apps.TutoriaConfig',
+    'tutoria.apps.TutoriaConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
